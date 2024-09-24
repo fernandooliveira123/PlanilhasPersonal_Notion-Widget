@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olá Chefe</title>
+    <script>
+        function calcularData() {
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const primeiroDiaAno = new Date(ano, 0, 1);
+            const ultimoDiaAno = new Date(ano, 11, 31);
+            const umDia = 1000 * 60 * 60 * 24;
+
+            const diaDoAno = Math.ceil((hoje - primeiroDiaAno + 1) / umDia);
+            const diasRestantes = Math.ceil((ultimoDiaAno - hoje) / umDia);
+
+            const numeroDaSemana = Math.ceil((hoje - primeiroDiaAno + 1) / (7 * umDia));
+            const semanasRestantes = Math.ceil(diasRestantes / 7);
+
+            const diasSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+            const diaDaSemana = diasSemana[hoje.getDay()];
+
+            document.getElementById('dataAtual').textContent = `Hoje é ${diaDaSemana}, ${hoje.getDate()} de ${hoje.toLocaleString('pt-BR', { month: 'long' })} de ${ano}`;
+            document.getElementById('diaDoAno').textContent = `${diaDoAno}º dia do ano. Existem ${diasRestantes} dias restantes em ${ano}.`;
+            document.getElementById('semanaDoAno').textContent = `${numeroDaSemana}ª semana do ano. Existem ${semanasRestantes} semanas restantes em ${ano}.`;
+        }
+
+        function recarregarDiariamente() {
+            const agora = new Date();
+            const proximaRecarga = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1, 0, 0, 0, 0);
+            const tempoAteProximaRecarga = proximaRecarga - agora;
+
+            setTimeout(() => {
+                location.reload();
+            }, tempoAteProximaRecarga);
+        }
+
+        window.onload = function() {
+            calcularData();
+            recarregarDiariamente();
+        }
+    </script>
+</head>
+<body>
+    <h1>Olá Chefe</h1>
+    <p id="dataAtual"></p>
+    <p id="diaDoAno"></p>
+    <p id="semanaDoAno"></p>
+</body>
+</html>
