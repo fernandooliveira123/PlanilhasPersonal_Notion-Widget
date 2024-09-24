@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro Decrescente de Treino</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cronômetro Decrescente de Treino</h1>
+
+        <!-- Input para configurar tempo -->
+        <div class="input-time">
+            <label for="timeInput">Definir Tempo (minutos):</label>
+            <input type="number" id="timeInput" min="1" max="60" value="2"> <!-- Valor inicial de 5 minutos -->
+        </div>
+
+        <!-- Display do cronômetro -->
+        <div class="timer">
+            <span id="minutes">02</span>:<span id="seconds">00</span>
+        </div>
+
+        <!-- Botões de controle -->
+        <div class="buttons">
+            <button id="start">Iniciar</button>
+            <button id="pause">Pausar</button>
+            <button id="reset">Reiniciar</button>
+        </div>
+    </div>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 90vw;
+            /* Ajusta a largura máxima para telas menores */
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 4vw;
+            /* Responsivo com base na largura da tela */
+        }
+
+        .input-time {
+            margin-bottom: 20px;
+        }
+
+        .input-time label {
+            margin-right: 10px;
+            font-size: 4.5vw;
+            /* Ajuste relativo para responsividade */
+
+        }
+
+        .input-time input {
+            padding: 10px;
+            font-size: 1.2rem;
+            width: 80px;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 12vw;
+            /* Adapta o tamanho da fonte ao tamanho da tela */
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            /* Para se ajustar em telas menores */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #61dafb;
+            color: #282c34;
+            transition: background-color 0.3s;
+            min-width: 100px;
+            /* Garantir que o botão tenha tamanho mínimo */
+        }
+
+        button:hover {
+            background-color: #21a1f1;
+        }
+
+        /* Media queries para telas menores */
+        @media (max-width: 600px) {
+            .timer {
+                font-size: 20vw;
+                /* Para dispositivos muito pequenos */
+            }
+
+            h1 {
+                font-size: 6vw;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 8px 16px;
+                min-width: 80px;
+                /* Reduz o tamanho mínimo em telas pequenas */
+            }
+        }
+    </style>
+
+    <script>
+
+        let timer;
+        let isRunning = false;
+        let totalTime = 120; // Tempo total em segundos (2 minutos por padrão)
+        let remainingTime = totalTime; // Tempo restante
+
+        // DOM Elements
+        const minutesDisplay = document.getElementById('minutes');
+        const secondsDisplay = document.getElementById('seconds');
+        const startButton = document.getElementById('start');
+        const pauseButton = document.getElementById('pause');
+        const resetButton = document.getElementById('reset');
+        const timeInput = document.getElementById('timeInput');
+
+        // Atualiza o tempo inicial baseado no input
+        timeInput.addEventListener('change', setInitialTime);
+
+        // Event Listeners
+        startButton.addEventListener('click', startTimer);
+        pauseButton.addEventListener('click', pauseTimer);
+        resetButton.addEventListener('click', resetTimer);
+
+        // Funções
+
+        // Define o tempo inicial baseado no input
+        function setInitialTime() {
+            const minutes = parseInt(timeInput.value, 10);
+            totalTime = minutes * 60; // Converte minutos para segundos
+            remainingTime = totalTime; // Reinicia o tempo restante
+            updateDisplay();
+        }
+
+        function startTimer() {
+            if (!isRunning && remainingTime > 0) {
+                isRunning = true;
+                timer = setInterval(() => {
+                    remainingTime--;
+                    updateDisplay();
+
+                    // Quando o tempo acabar
+                    if (remainingTime <= 0) {
+                        clearInterval(timer);
+                        alert("O tempo acabou!");
+                        isRunning = false;
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timer);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            remainingTime = totalTime;
+            updateDisplay();
+        }
+
+        // Atualiza a exibição do cronômetro
+        function updateDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+
+            minutesDisplay.textContent = minutes < 10 ? `0${minutes}` : minutes;
+            secondsDisplay.textContent = seconds < 10 ? `0${seconds}` : seconds;
+        }
+
+    </script>
+
+</body>
+
+</html>
