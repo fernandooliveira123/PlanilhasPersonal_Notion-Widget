@@ -31,105 +31,97 @@
         </div>
     </div>
 
-
+<footer>
+    <p> Este é um contéudeo protegido por direitos autoriais&#xa9 Planilhas Personal Trainerr</p>
+</footer>
+    
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #282c34;
-            color: white;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+html, body {
+    min-height: 100vh; /* Garante que a altura mínima do body seja 100% da viewport */
+    display: flex;
+    flex-direction: column;
+}
 
-        .container {
-            text-align: center;
-            max-width: 90vw;
-            /* Ajusta a largura máxima para telas menores */
-            width: 100%;
-        }
+body {
+    justify-content: space-between;
+    background-color: #282c34;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
 
-        h1 {
-            margin-bottom: 20px;
-            font-size: 4vw;
-            /* Responsivo com base na largura da tela */
-        }
+.container {
+    text-align: center;
+    max-width: 90vw;
+    width: 100%;
+}
 
-        .input-time {
-            margin-bottom: 20px;
-        }
+h1 {
+    margin-bottom: 20px;
+    font-size: 4vw;
+}
 
-        .input-time label {
-            margin-right: 10px;
-            font-size: 4.5vw;
-            /* Ajuste relativo para responsividade */
+.input-time {
+    margin-bottom: 20px;
+}
 
-        }
+.input-time label {
+    margin-right: 10px;
+    font-size: 4.5vw;
+}
 
-        .input-time input {
-            padding: 10px;
-            font-size: 1.2rem;
-            width: 80px;
-            text-align: center;
-        }
+.input-time input {
+    padding: 10px;
+    font-size: 1.2rem;
+    width: 80px;
+    text-align: center;
+}
 
-        .timer {
-            font-size: 12vw;
-            /* Adapta o tamanho da fonte ao tamanho da tela */
-            margin-bottom: 20px;
-        }
+.timer {
+    font-size: 12vw;
+    margin-bottom: 20px;
+}
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            /* Para se ajustar em telas menores */
-        }
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 
-        button {
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #61dafb;
-            color: #282c34;
-            transition: background-color 0.3s;
-            min-width: 100px;
-            /* Garantir que o botão tenha tamanho mínimo */
-        }
+button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #61dafb;
+    color: #282c34;
+    transition: background-color 0.3s;
+    min-width: 100px;
+}
 
-        button:hover {
-            background-color: #21a1f1;
-        }
+button:hover {
+    background-color: #21a1f1;
+}
 
-        /* Media queries para telas menores */
-        @media (max-width: 600px) {
-            .timer {
-                font-size: 20vw;
-                /* Para dispositivos muito pequenos */
-            }
+footer {
+    background-color: #222;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    position: fixed; /* Rodapé fixo no final */
+    bottom: 0; /* Posicionado no fundo da página */
+    left: 0;
+}
 
-            h1 {
-                font-size: 6vw;
-            }
-
-            button {
-                font-size: 1rem;
-                padding: 8px 16px;
-                min-width: 80px;
-                /* Reduz o tamanho mínimo em telas pequenas */
-            }
-        }
     </style>
 
     <script>
