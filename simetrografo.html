@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Avaliação Postural</title>
+  <style>
+    /* Estilos CSS */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #upload-form {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #upload-input {
+      display: none;
+    }
+
+    #upload-label {
+      padding: 10px 20px;
+      background-color: #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #preview {
+      margin-top: 20px;
+      text-align: center;
+      position: relative; /* Adicionado para posicionar o fio de prumo e as linhas corretamente */
+    }
+
+    #preview img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #plumb-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background-color: red;
+      z-index: 999;
+    }
+
+    .grid-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: black;
+      opacity: 0.5;
+      z-index: 1; /* Adicionado para garantir que as linhas fiquem à frente da foto */
+    }
+
+    #download-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #ccc;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Avaliação Postural</h1>
+
+    <form id="upload-form">
+      <label for="upload-input" id="upload-label">Selecionar imagem</label>
+      <input type="file" id="upload-input" accept="image/*">
+    </form>
+
+    <div id="preview"></div>
+
+    <a id="download-button" download="imagem_com_grade.png">Baixar Imagem com Grade</a>
+  </div>
+
+  <script>
+    // JavaScript para manipular o upload da imagem e exibir a prévia
+
+    const uploadInput = document.getElementById('upload-input');
+    const preview = document.getElementById('preview');
+    const plumbLine = document.createElement('div');
+    plumbLine.id = 'plumb-line';
+    const downloadButton = document.getElementById('download-button');
+
+    uploadInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const image = new Image();
+        image.onload = function() {
+          preview.innerHTML = '';
+          preview.appendChild(image);
+
+          // Adicionar o fio de prumo à imagem
+          preview.appendChild(plumbLine.cloneNode(true));
+
+          // Adicionar linhas horizontais
+          const imageHeight = image.offsetHeight;
+          const numLines = 20; // Número de linhas desejadas (aqui foi alterado para 20)
+          const interval = imageHeight / (numLines + 1);
+
+          for (let i = 1; i <= numLines; i++) {
+            const gridLine = document.createElement('div');
+            gridLine.className = 'grid-line';
+            gridLine.style.top = `${interval * i}px`;
+            preview.appendChild(gridLine);
+          }
+
+          // Adicionar manipulador de evento para o botão de download
+          downloadButton.addEventListener('click', function() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            // Desenhar a imagem na tela de desenho
+            context.drawImage(image, 0, 0, image.width, image.height);
+
+            // Desenhar as linhas da grade na tela de desenho
+            const gridLines = preview.querySelectorAll('.grid-line');
+            gridLines.forEach(function(line) {
+              context.fillStyle = line.style.backgroundColor;
+              context.fillRect(0, parseFloat(line.style.top), image.width, 1);
+            });
+
+            // Converter a tela de desenho em uma URL de dados da imagem
+            const downloadURL = canvas.toDataURL('image/png');
+
+            // Criar um link temporário para fazer o download da imagem
+            const tempLink = document.createElement('a');
+            tempLink.href = downloadURL;
+            tempLink.download = 'imagem_com_grade.png';
+
+            // Adicionar o link temporário ao corpo do documento e clicar nele
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+          });
+        };
+
+        image.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
