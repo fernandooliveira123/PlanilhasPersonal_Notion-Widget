@@ -38,6 +38,11 @@
             font-size: 1rem;
             background-color: #fff;
         }
+
+        body {
+            background-color: rgb(29, 29, 29);
+            color: white;
+        }
     </style>
 
     <!-- Carregando o Chart.js primeiro -->
@@ -52,10 +57,10 @@
         const filterExercise = document.getElementById('filterExercise');
         const ctx = document.getElementById('progressChart').getContext('2d');
 
-        // Dados para o gráfico
-        let exerciseData = [];
-        let weightsData = [];
-        let labelsData = [];  // Armazena o rótulo "Exercício - Data"
+        // Recuperar dados do localStorage ou definir arrays vazios
+        let exerciseData = JSON.parse(localStorage.getItem('exerciseData')) || [];
+        let weightsData = JSON.parse(localStorage.getItem('weightsData')) || [];
+        let labelsData = JSON.parse(localStorage.getItem('labelsData')) || [];
 
         // Configuração inicial do gráfico
         let chart = new Chart(ctx, {
@@ -94,6 +99,11 @@
                 option.text = exercise;
                 filterExercise.add(option);
             }
+
+            // Salvar os dados no localStorage
+            localStorage.setItem('exerciseData', JSON.stringify(exerciseData));
+            localStorage.setItem('weightsData', JSON.stringify(weightsData));
+            localStorage.setItem('labelsData', JSON.stringify(labelsData));
 
             updateChart();
         }
@@ -140,6 +150,17 @@
             filterData(this.value);
         });
 
+        // Inicializar o filtro de exercícios ao carregar a página
+        window.addEventListener('load', () => {
+            const exercises = [...new Set(exerciseData)];  // Remove duplicatas
+            exercises.forEach(exercise => {
+                const option = document.createElement('option');
+                option.value = exercise;
+                option.text = exercise;
+                filterExercise.add(option);
+            });
+            updateChart();
+        });
     </script>
 </body>
 </html>
