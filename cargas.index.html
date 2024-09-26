@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progresso de Cargas - Treino</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Progresso de Cargas</h1>
+
+        <form id="loadForm">
+            <label for="exercise">Exercício:</label>
+            <input type="text" id="exercise" placeholder="Nome do exercício" required>
+
+            <label for="weight">Carga (kg):</label>
+            <input type="number" id="weight" placeholder="Ex: 60" required>
+
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <label for="filterExercise">Filtrar por Exercício:</label>
+        <select id="filterExercise">
+            <option value="all">Todos</option>
+        </select>
+
+        <canvas id="progressChart"></canvas>
+    </div>
+
+    <style>
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+    </style>
+
+    <!-- Carregando o Chart.js primeiro -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Agora o seu script JavaScript -->
+    <script>
+        // Elementos DOM
+        const loadForm = document.getElementById('loadForm');
+        const exerciseInput = document.getElementById('exercise');
+        const weightInput = document.getElementById('weight');
+        const filterExercise = document.getElementById('filterExercise');
+        const ctx = document.getElementById('progressChart').getContext('2d');
+
+        // Dados para o gráfico
+        let exerciseData = [];
+        let weightsData = [];
+        let labelsData = [];  // Armazena o rótulo "Exercício - Data"
+
+        // Configuração inicial do gráfico
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsData, // Rótulos personalizados (Exercício - Data)
+                datasets: [{
+                    label: 'Cargas (kg)',
+                    data: weightsData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Função para adicionar dados ao gráfico
+        function addData(exercise, weight) {
+            const today = new Date().toLocaleDateString();  // Data automática
+            exerciseData.push(exercise);
+            weightsData.push(weight);
+            labelsData.push(`${exercise} - ${today}`);  // Ex: "Supino - 26/09/2024"
+
+            // Atualizar filtro de exercícios
+            if (!Array.from(filterExercise.options).some(option => option.value === exercise)) {
+                const option = document.createElement('option');
+                option.value = exercise;
+                option.text = exercise;
+                filterExercise.add(option);
+            }
+
+            updateChart();
+        }
+
+        // Função para atualizar o gráfico
+        function updateChart() {
+            chart.update();
+        }
+
+        // Função para atualizar o gráfico de acordo com o filtro
+        function filterData(exercise) {
+            const filteredWeights = [];
+            const filteredLabels = [];
+
+            exerciseData.forEach((ex, index) => {
+                if (exercise === 'all' || ex === exercise) {
+                    filteredWeights.push(weightsData[index]);
+                    filteredLabels.push(labelsData[index]);
+                }
+            });
+
+            chart.data.labels = filteredLabels;
+            chart.data.datasets[0].data = filteredWeights;
+
+            updateChart();
+        }
+
+        // Evento para adicionar dados ao gráfico
+        loadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const exercise = exerciseInput.value.trim();
+            const weight = parseFloat(weightInput.value.trim());
+            
+            if (exercise && weight) {
+                addData(exercise, weight);
+                exerciseInput.value = '';
+                weightInput.value = '';
+            }
+        });
+
+        // Evento para filtrar os dados ao selecionar um exercício
+        filterExercise.addEventListener('change', function() {
+            filterData(this.value);
+        });
+
+    </script>
+</body>
+</html>
