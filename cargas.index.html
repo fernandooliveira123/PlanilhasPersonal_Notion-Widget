@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progresso de Cargas - Treino</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Progresso de Cargas</h1>
@@ -25,9 +27,16 @@
             <option value="all">Todos</option>
         </select>
 
-        <canvas id="progressChart"></canvas>
-    </div>
 
+        <canvas id="progressChart"></canvas>
+
+        <!-- Botão de download do CSV -->
+        <button id="downloadCSV">Baixar CSV</button>
+    </div>
+    <footer>
+        <p> Este é um contéudeo protegido por direitos autoriais &#xa9 Planilhas Personal Trainer-
+            @PlanilhaspersonalTrainer</p>
+    </footer>
     <style>
         select {
             width: 100%;
@@ -40,8 +49,19 @@
         }
 
         body {
-            background-color: rgb(29, 29, 29);
+            background-color: rgb(17, 17, 16);
             color: white;
+        }
+
+        h1 {
+            text-align: center;
+            border: 1px solid;
+            font-size: 29px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: small;
         }
     </style>
 
@@ -56,11 +76,45 @@
         const weightInput = document.getElementById('weight');
         const filterExercise = document.getElementById('filterExercise');
         const ctx = document.getElementById('progressChart').getContext('2d');
+        const downloadCSVButton = document.getElementById('downloadCSV');
 
-        // Recuperar dados do localStorage ou definir arrays vazios
-        let exerciseData = JSON.parse(localStorage.getItem('exerciseData')) || [];
-        let weightsData = JSON.parse(localStorage.getItem('weightsData')) || [];
-        let labelsData = JSON.parse(localStorage.getItem('labelsData')) || [];
+        // Dados para o gráfico
+        let exerciseData = [];
+        let weightsData = [];
+        let labelsData = [];  // Armazena o rótulo "Exercício - Data"
+
+        // Função para salvar no localStorage
+        function saveToLocalStorage() {
+            const data = {
+                exerciseData,
+                weightsData,
+                labelsData,
+            };
+            localStorage.setItem('workoutData', JSON.stringify(data));
+        }
+
+        // Função para carregar dados do localStorage
+        function loadFromLocalStorage() {
+            const storedData = localStorage.getItem('workoutData');
+            if (storedData) {
+                const { exerciseData: storedExerciseData, weightsData: storedWeightsData, labelsData: storedLabelsData } = JSON.parse(storedData);
+
+                exerciseData = storedExerciseData || [];
+                weightsData = storedWeightsData || [];
+                labelsData = storedLabelsData || [];
+
+                exerciseData.forEach(exercise => {
+                    if (!Array.from(filterExercise.options).some(option => option.value === exercise)) {
+                        const option = document.createElement('option');
+                        option.value = exercise;
+                        option.text = exercise;
+                        filterExercise.add(option);
+                    }
+                });
+
+                updateChart();
+            }
+        }
 
         // Configuração inicial do gráfico
         let chart = new Chart(ctx, {
@@ -88,24 +142,22 @@
         // Função para adicionar dados ao gráfico
         function addData(exercise, weight) {
             const today = new Date().toLocaleDateString();  // Data automática
-            exerciseData.push(exercise);
+            const normalizedExercise = exercise.toLowerCase();  // Converter para minúsculas
+
+            exerciseData.push(normalizedExercise);
             weightsData.push(weight);
-            labelsData.push(`${exercise} - ${today}`);  // Ex: "Supino - 26/09/2024"
+            labelsData.push(`${normalizedExercise} - ${today}`);  // Ex: "supino reto - 26/09/2024"
 
             // Atualizar filtro de exercícios
-            if (!Array.from(filterExercise.options).some(option => option.value === exercise)) {
+            if (!Array.from(filterExercise.options).some(option => option.value === normalizedExercise)) {
                 const option = document.createElement('option');
-                option.value = exercise;
-                option.text = exercise;
+                option.value = normalizedExercise;
+                option.text = exercise;  // Exibe o original, mas guarda o normalizado
                 filterExercise.add(option);
             }
 
-            // Salvar os dados no localStorage
-            localStorage.setItem('exerciseData', JSON.stringify(exerciseData));
-            localStorage.setItem('weightsData', JSON.stringify(weightsData));
-            localStorage.setItem('labelsData', JSON.stringify(labelsData));
-
             updateChart();
+            saveToLocalStorage();  // Salvar os dados atualizados no localStorage
         }
 
         // Função para atualizar o gráfico
@@ -115,11 +167,12 @@
 
         // Função para atualizar o gráfico de acordo com o filtro
         function filterData(exercise) {
+            const normalizedFilter = exercise.toLowerCase();  // Converter para minúsculas
             const filteredWeights = [];
             const filteredLabels = [];
 
             exerciseData.forEach((ex, index) => {
-                if (exercise === 'all' || ex === exercise) {
+                if (normalizedFilter === 'all' || ex === normalizedFilter) {
                     filteredWeights.push(weightsData[index]);
                     filteredLabels.push(labelsData[index]);
                 }
@@ -132,12 +185,12 @@
         }
 
         // Evento para adicionar dados ao gráfico
-        loadForm.addEventListener('submit', function(e) {
+        loadForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const exercise = exerciseInput.value.trim();
             const weight = parseFloat(weightInput.value.trim());
-            
+
             if (exercise && weight) {
                 addData(exercise, weight);
                 exerciseInput.value = '';
@@ -146,21 +199,46 @@
         });
 
         // Evento para filtrar os dados ao selecionar um exercício
-        filterExercise.addEventListener('change', function() {
+        filterExercise.addEventListener('change', function () {
             filterData(this.value);
         });
 
-        // Inicializar o filtro de exercícios ao carregar a página
-        window.addEventListener('load', () => {
-            const exercises = [...new Set(exerciseData)];  // Remove duplicatas
-            exercises.forEach(exercise => {
-                const option = document.createElement('option');
-                option.value = exercise;
-                option.text = exercise;
-                filterExercise.add(option);
+        // Função para gerar e baixar o arquivo CSV
+        function generateCSV() {
+            // Verificar se há dados
+            if (exerciseData.length === 0 || weightsData.length === 0) {
+                alert("Sem dados para baixar.");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";  // Tipo de conteúdo
+            csvContent += "Exercício,Carga (kg),Data\n";  // Cabeçalhos
+
+            // Adicionando dados ao CSV
+            exerciseData.forEach((exercise, index) => {
+                const row = `${exercise},${weightsData[index]},${labelsData[index].split(' - ')[1]}`;  // Separar "Exercício - Data"
+                csvContent += row + "\n";  // Nova linha
             });
-            updateChart();
-        });
+
+            // Criar arquivo Blob e fazer o download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "cargas_treino.csv");  // Nome do arquivo
+            document.body.appendChild(link);
+
+            link.click();  // Clicar no link para baixar
+
+            document.body.removeChild(link);  // Remover o link após o download
+        }
+
+        // Evento para baixar o CSV
+        downloadCSVButton.addEventListener('click', generateCSV);
+
+        // Carregar dados do localStorage ao iniciar a página
+        window.onload = loadFromLocalStorage;
+
     </script>
 </body>
+
 </html>
