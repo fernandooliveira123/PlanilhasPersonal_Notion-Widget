@@ -69,6 +69,8 @@
 
             <button type="submit">Calcular</button>
             <button type="button" onclick="gerarPDF()">Baixar PDF</button>
+            <button type="button" onclick="downloadCSV()">Baixar CSV</button>
+
 
         </form>
 
@@ -78,8 +80,8 @@
         <p id="resultadoRCQ"></p>
         <p id="resultadoPercentualGordura"></p>
     </div>
-  
-  <style>
+
+    <style>
   .container {
     width: 90%;
     margin: auto;
@@ -122,9 +124,7 @@ button:hover {
 }
 
 </style>
-
-          
-  
+    
     <script>
         document.getElementById('sex').addEventListener('change', updateSkinfolds);
         document.getElementById('evaluationForm').addEventListener('submit', function (e) {
@@ -253,6 +253,57 @@ button:hover {
             // Salva o PDF
             doc.save("avaliacao_fisica.pdf");
         }
+
+        function downloadCSV() {
+            // Coletar os dados do formulário
+            const peso = document.getElementById('weight').value;
+            const altura = document.getElementById('height').value;
+            const idade = document.getElementById('age').value;
+            const ombros = document.getElementById('shoulders').value;
+            const peitoral = document.getElementById('chest').value;
+            const bracoDireito = document.getElementById('armRight').value;
+            const bracoEsquerdo = document.getElementById('armLeft').value;
+            const cintura = document.getElementById('waist').value;
+            const quadril = document.getElementById('hip').value;
+            const pernaDireita = document.getElementById('legRight').value;
+            const pernaEsquerda = document.getElementById('legLeft').value;
+            const panturrilhaDireita = document.getElementById('calfRight').value;
+            const panturrilhaEsquerda = document.getElementById('calfLeft').value;
+            const sexo = document.getElementById('sex').value;
+
+            // Se houver dobras cutâneas, coletá-las
+            let dobrasCutaneas = '';
+            if (sexo === 'male') {
+                const peitoralDobras = document.getElementById('chestSkinfold').value || '';
+                const abdominalDobras = document.getElementById('abdominalSkinfold').value || '';
+                const coxaDobras = document.getElementById('thighSkinfold').value || '';
+                dobrasCutaneas = `${peitoralDobras},${abdominalDobras},${coxaDobras}`;
+            } else if (sexo === 'female') {
+                const tricepsDobras = document.getElementById('tricepsSkinfold').value || '';
+                const suprailiacaDobras = document.getElementById('suprailiacSkinfold').value || '';
+                const coxaDobras = document.getElementById('thighSkinfold').value || '';
+                dobrasCutaneas = `${tricepsDobras},${suprailiacaDobras},${coxaDobras}`;
+            }
+
+            // Gerar o conteúdo CSV
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Peso (kg),Estatura (cm),Idade,Ombros (cm),Peitoral (cm),Braço Direito (cm),Braço Esquerdo (cm),Cintura (cm),Quadril (cm),Perna Direita (cm),Perna Esquerda (cm),Panturrilha Direita (cm),Panturrilha Esquerda (cm),Sexo,Dobras Cutâneas\n";
+            csvContent += `${peso},${altura},${idade},${ombros},${peitoral},${bracoDireito},${bracoEsquerdo},${cintura},${quadril},${pernaDireita},${pernaEsquerda},${panturrilhaDireita},${panturrilhaEsquerda},${sexo},${dobrasCutaneas}\n`;
+
+            // Criar um link para download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "avaliacao_fisica.csv");
+            document.body.appendChild(link);
+
+            // Acionar o download
+            link.click();
+
+            // Remover o link após o download
+            document.body.removeChild(link);
+        }
+
 
 
     </script>
