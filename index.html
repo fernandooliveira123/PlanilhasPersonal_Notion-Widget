@@ -45,7 +45,9 @@
 </head>
 
 <body>
-    <h1 class="olá">Olá Chefe! Como você está hoje?</h1>
+    <div class="container1">
+        <h1 class="olá">Olá Chefe! Como você está hoje?</h1>
+    </div>
 
     <div class="paragrafo">
         <p id="dataAtual"></p>
@@ -57,16 +59,28 @@
 
 
     <style>
+        .container1 {
+            max-width: 60%;
+            background-color: rgb(255, 247, 247);
+            border: 1px solid;
+            border-radius: 5%;
+        }
+        
         .olá {
-            color: rgb(255, 255, 255);
+            color: rgb(247, 23, 23);
+            font-size: 25px;
         }
 
         .paragrafo {
-            color: aqua;
+            color: rgb(241, 238, 238);
+            max-width: 60%;
         }
 
         .paragrafo {
-            background-color: green;
+            background-color: rgb(6, 163, 6);
+            border: 1px solid;
+            border-radius: 5%;
+            max-width: 60%;
         }
     </style>
 
