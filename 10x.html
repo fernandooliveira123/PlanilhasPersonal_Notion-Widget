@@ -13,60 +13,82 @@
         <div id="slide" class="slide"></div>
         <div id="reference" class="reference"></div> <!-- Nova div para a referência -->
     </div>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: transparent;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: transparent;
-        }
+    .slider-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+        background-color: transparent;
+        color: white;
+    }
 
-        .slider-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            /* Forçar elementos a ficarem um abaixo do outro */
-            width: 100%;
-            height: 100vh;
-            background-color: transparent;
-            color: white;
-        }
+    .slide {
+        font-size: 2rem;
+        text-align: center;
+        padding: 20px;
+        border: 3px solid #61dafb;
+        border-radius: 15px;
+        background: #20232a;
+        color: #61dafb;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        max-width: 70%;
+        word-wrap: break-word;
+        transition: opacity 1s ease;
+    }
 
+    .reference {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: #ffffff;
+        opacity: 0.7;
+        text-align: center;
+        max-width: 70%;
+    }
+
+    /* Estilos para telas menores que 768px (tablets e smartphones) */
+    @media (max-width: 768px) {
         .slide {
-            font-size: 2rem;
-            text-align: center;
-            padding: 20px;
-            border: 3px solid #61dafb;
-            border-radius: 15px;
-            background: #20232a;
-            color: #61dafb;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 70%;
-            word-wrap: break-word;
-            transition: opacity 1s ease;
+            font-size: 1.5rem; /* Diminui o tamanho da fonte para dispositivos menores */
+            padding: 15px; /* Ajusta o padding */
+            max-width: 90%; /* Aumenta a largura máxima do slide em telas pequenas */
         }
 
         .reference {
-            margin-top: 20px;
-            /* Espaçamento entre a frase e a referência */
-            font-size: 1rem;
-            color: #ffffff;
-            opacity: 0.7;
-            text-align: center;
-            max-width: 70%;
+            font-size: 0.9rem; /* Ajusta o tamanho da fonte da referência */
         }
-    </style>
-    <script>
+    }
+
+    /* Estilos para telas menores que 480px (smartphones) */
+    @media (max-width: 480px) {
+        .slide {
+            font-size: 1.2rem; /* Diminui ainda mais a fonte para smartphones */
+            padding: 10px;
+        }
+
+        .reference {
+            font-size: 0.8rem; /* Ajusta a fonte da referência em smartphones */
+        }
+    }
+</style>
+<script>
         const slides = [
             {
                 frase: "Sucesso é sua obrigação, não uma opção.",
