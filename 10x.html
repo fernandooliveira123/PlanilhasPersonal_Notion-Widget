@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10X Motivational Slides</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="slider-container">
+        <div id="slide" class="slide"></div>
+        <div id="reference" class="reference"></div> <!-- Nova div para a referência -->
+    </div>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .slider-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* Forçar elementos a ficarem um abaixo do outro */
+            width: 100%;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+        }
+
+        .slide {
+            font-size: 2rem;
+            text-align: center;
+            padding: 20px;
+            border: 3px solid #61dafb;
+            border-radius: 15px;
+            background: #20232a;
+            color: #61dafb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 70%;
+            word-wrap: break-word;
+            transition: opacity 1s ease;
+        }
+
+        .reference {
+            margin-top: 20px;
+            /* Espaçamento entre a frase e a referência */
+            font-size: 1rem;
+            color: #ffffff;
+            opacity: 0.7;
+            text-align: center;
+            max-width: 70%;
+        }
+    </style>
+    <script>
+        const slides = [
+            {
+                frase: "Sucesso é sua obrigação, não uma opção.",
+                referencia: "Capítulo 4: O Sucesso é sua obrigação, A Regra 10X"
+            },
+            {
+                frase: "Seus objetivos devem ser 10 vezes maiores.",
+                referencia: "Capítulo 9: Objetivos 10X, A Regra 10X"
+            },
+            {
+                frase: "Não há falta de sucesso. Crie o seu!",
+                referencia: "Capítulo 5: Não existe falta de sucesso, A Regra 10X"
+            },
+            {
+                frase: "A mediocridade é uma fórmula para o desastre.",
+                referencia: "Capítulo 8: O Mediano é uma fórmula para o desastre, A Regra 10X"
+            },
+            {
+                frase: "Competir é para os fracos. Domine o seu setor.",
+                referencia: "Capítulo 10: Competir é para os fracos, A Regra 10X"
+            },
+            {
+                frase: "Obstáculos são apenas sinais para aumentar o esforço.",
+                referencia: "Capítulo 7: Quatro níveis de ação, A Regra 10X"
+            },
+            {
+                frase: "Se você não está comprometido, você já falhou.",
+                referencia: "Capítulo 13: Vá com tudo e se comprometa ao extremo, A Regra 10X"
+            },
+            {
+                frase: "A obsessão é um dom, não uma doença.",
+                referencia: "Capítulo 12: Obsessão não é doença; é um dom, A Regra 10X"
+            },
+            {
+                frase: "Pense grande e aja com ousadia.",
+                referencia: "Capítulo 1: O que é a Regra 10X?, A Regra 10X"
+            },
+            {
+                frase: "O medo é um bom indicador. Enfrente-o!",
+                referencia: "Capítulo 16: O medo é um bom indicador, A Regra 10X"
+            },
+            {
+                frase: "Desculpas só atrapalham o progresso. Assuma o controle.",
+                referencia: "Capítulo 21: Desculpas, A Regra 10X"
+            },
+            {
+                frase: "O cliente não é sua meta. O sucesso é.",
+                referencia: "Capítulo 19: Satisfação do cliente é a meta errada, A Regra 10X"
+            },
+            {
+                frase: "Se você está satisfeito, você está estagnado.",
+                referencia: "Capítulo 18: A crítica é sinal de sucesso, A Regra 10X"
+            },
+            {
+                frase: "O fracasso não é falta de talento, mas de ação.",
+                referencia: "Capítulo 7: Quatro níveis de ação, A Regra 10X"
+            },
+            {
+                frase: "Seja o fogo que ilumina seu próprio caminho.",
+                referencia: "Capítulo 15: Comece um incêndio, A Regra 10X"
+            },
+            {
+                frase: "Seus pensamentos definem seu sucesso. Expanda-os!",
+                referencia: "Capítulo 1: O que é a Regra 10X?, A Regra 10X"
+            },
+            {
+                frase: "A crítica é sinal de que você está fazendo algo certo.",
+                referencia: "Capítulo 18: A crítica é sinal de sucesso, A Regra 10X"
+            },
+            {
+                frase: "Assuma o controle de tudo na sua vida.",
+                referencia: "Capítulo 6: Assuma o controle, A Regra 10X"
+            },
+            {
+                frase: "Sucesso exige esforço em uma escala inimaginável.",
+                referencia: "Capítulo 2: Por que a Regra 10X é tão importante?, A Regra 10X"
+            },
+            {
+                frase: "Operar em níveis 10X se tornará um hábito.",
+                referencia: "Capítulo 23: Começando com a Regra 10X, A Regra 10X"
+            },
+            {
+                frase: "Você só falha se parar de tentar.",
+                referencia: "Capítulo 7: Quatro níveis de ação, A Regra 10X"
+            },
+            {
+                frase: "Cada passo 10X traz você mais perto do seu objetivo.",
+                referencia: "Capítulo 9: Objetivos 10X, A Regra 10X"
+            },
+            {
+                frase: "O mediano não leva você ao extraordinário.",
+                referencia: "Capítulo 8: O Mediano é uma fórmula para o desastre, A Regra 10X"
+            },
+            {
+                frase: "A única diferença entre sucesso e fracasso é a ação.",
+                referencia: "Capítulo 7: Quatro níveis de ação, A Regra 10X"
+            },
+            {
+                frase: "Você precisa sonhar grande e agir grande.",
+                referencia: "Capítulo 9: Objetivos 10X, A Regra 10X"
+            },
+            {
+                frase: "É sua obrigação atingir o seu potencial máximo.",
+                referencia: "Capítulo 4: O Sucesso é sua obrigação, A Regra 10X"
+            },
+            {
+                frase: "Quanto mais ações você toma, mais sorte você tem.",
+                referencia: "Capítulo 6: Assuma o controle, A Regra 10X"
+            },
+            {
+                frase: "Vá além do que todos acham que é suficiente.",
+                referencia: "Capítulo 7: Quatro níveis de ação, A Regra 10X"
+            },
+            {
+                frase: "A única limitação real é a que você coloca em si mesmo.",
+                referencia: "Capítulo 1: O que é a Regra 10X?, A Regra 10X"
+            },
+            {
+                frase: "Estipule metas 10X maiores e não se contente com menos.",
+                referencia: "Capítulo 9: Objetivos 10X, A Regra 10X"
+            }
+        ];
+
+        let usedIndexes = [];
+
+        function getRandomIndex() {
+            if (usedIndexes.length === slides.length) {
+                usedIndexes = [];
+            }
+
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * slides.length);
+            } while (usedIndexes.includes(randomIndex));
+
+            usedIndexes.push(randomIndex);
+            return randomIndex;
+        }
+
+        function showSlide() {
+            const slideElement = document.getElementById('slide');
+            const referenceElement = document.getElementById('reference');
+            const randomIndex = getRandomIndex();
+
+            // Define a frase e a referência no slide
+            slideElement.textContent = slides[randomIndex].frase;
+            referenceElement.textContent = `Referência: ${slides[randomIndex].referencia}`;
+
+            // Tornar visível e fazer a transição
+            slideElement.style.opacity = 1;
+            referenceElement.style.opacity = 1;
+
+            // Mudar para o próximo slide após 30 segundos (30000 ms)
+            setTimeout(() => {
+                slideElement.style.opacity = 0;
+                referenceElement.style.opacity = 0;
+                setTimeout(showSlide, 1000); // Adiciona uma pequena transição de 1s entre slides
+            }, 30000);
+        }
+
+        // Inicializar o primeiro slide
+        showSlide();
+
+    </script>
+
+</body>
+
+</html>
