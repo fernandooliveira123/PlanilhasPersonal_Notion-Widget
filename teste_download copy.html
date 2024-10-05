@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progresso de Cargas - Treino</title>
+    <style>
+        body {
+            background-color: rgb(17, 17, 16);
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 29px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #progressChart {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: small;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Progresso de Cargas</h1>
+
+        <form id="loadForm">
+            <label for="exercise">Exercício:</label>
+            <input type="text" id="exercise" placeholder="Nome do exercício" required>
+
+            <label for="weight">Carga (kg):</label>
+            <input type="number" id="weight" placeholder="Ex: 60" required>
+
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <label for="filterExercise">Filtrar por Exercício:</label>
+        <select id="filterExercise">
+            <option value="all">Todos</option>
+        </select>
+
+        <canvas id="progressChart"></canvas>
+
+        <!-- Botão de download do CSV -->
+        <button id="downloadCSV">Baixar CSV</button>
+    </div>
+    <footer>
+        <p>Este é um conteúdo protegido por direitos autorais &#xa9 Planilhas Personal Trainer-
+            @PlanilhaspersonalTrainer</p>
+    </footer>
+
+    <!-- Carregando o Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- O Script JavaScript atualizado -->
+    <script>
+        // Elementos DOM
+        const loadForm = document.getElementById('loadForm');
+        const exerciseInput = document.getElementById('exercise');
+        const weightInput = document.getElementById('weight');
+        const filterExercise = document.getElementById('filterExercise');
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const downloadCSVButton = document.getElementById('downloadCSV');
+
+        // Dados para o gráfico
+        let exerciseData = [];
+        let weightsData = [];
+        let labelsData = [];  // Armazena o rótulo "Exercício - Data"
+
+        // Função para salvar no localStorage
+        function saveToLocalStorage() {
+            const data = {
+                exerciseData,
+                weightsData,
+                labelsData,
+            };
+            localStorage.setItem('workoutData', JSON.stringify(data));
+        }
+
+        // Função para carregar dados do localStorage
+        function loadFromLocalStorage() {
+            const storedData = localStorage.getItem('workoutData');
+            if (storedData) {
+                const { exerciseData: storedExerciseData, weightsData: storedWeightsData, labelsData: storedLabelsData } = JSON.parse(storedData);
+
+                exerciseData = storedExerciseData || [];
+                weightsData = storedWeightsData || [];
+                labelsData = storedLabelsData || [];
+
+                exerciseData.forEach(exercise => {
+                    if (!Array.from(filterExercise.options).some(option => option.value === exercise)) {
+                        const option = document.createElement('option');
+                        option.value = exercise;
+                        option.text = exercise;
+                        filterExercise.add(option);
+                    }
+                });
+
+                updateChart();
+            }
+        }
+
+        // Configuração inicial do gráfico
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsData, // Rótulos personalizados (Exercício - Data)
+                datasets: [{
+                    label: 'Cargas (kg)',
+                    data: weightsData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Função para adicionar dados ao gráfico
+        function addData(exercise, weight) {
+            const today = new Date().toLocaleDateString();
+            const normalizedExercise = exercise.toLowerCase();
+
+            exerciseData.push(normalizedExercise);
+            weightsData.push(weight);
+            labelsData.push(`${normalizedExercise} - ${today}`);
+
+            if (!Array.from(filterExercise.options).some(option => option.value === normalizedExercise)) {
+                const option = document.createElement('option');
+                option.value = normalizedExercise;
+                option.text = exercise;
+                filterExercise.add(option);
+            }
+
+            updateChart();
+            saveToLocalStorage();
+        }
+
+        // Função para atualizar o gráfico
+        function updateChart() {
+            chart.update();
+        }
+
+        // Função para atualizar o gráfico de acordo com o filtro
+        function filterData(exercise) {
+            const normalizedFilter = exercise.toLowerCase();
+            const filteredWeights = [];
+            const filteredLabels = [];
+
+            exerciseData.forEach((ex, index) => {
+                if (normalizedFilter === 'all' || ex === normalizedFilter) {
+                    filteredWeights.push(weightsData[index]);
+                    filteredLabels.push(labelsData[index]);
+                }
+            });
+
+            chart.data.labels = filteredLabels;
+            chart.data.datasets[0].data = filteredWeights;
+
+            updateChart();
+        }
+
+        // Evento para adicionar dados ao gráfico
+        loadForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const exercise = exerciseInput.value.trim();
+            const weight = parseFloat(weightInput.value.trim());
+
+            if (exercise && weight) {
+                addData(exercise, weight);
+                exerciseInput.value = '';
+                weightInput.value = '';
+            }
+        });
+
+        // Evento para filtrar os dados ao selecionar um exercício
+        filterExercise.addEventListener('change', function () {
+            filterData(this.value);
+        });
+
+        // Função para gerar e baixar o arquivo CSV
+        // Função para criar um link de download e permitir o usuário clicar manualmente
+        function generateCSVLink() {
+            if (exerciseData.length === 0 || weightsData.length === 0) {
+                alert("Sem dados para baixar.");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Exercício,Carga (kg),Data\n";
+
+            exerciseData.forEach((exercise, index) => {
+                const row = `${exercise},${weightsData[index]},${labelsData[index].split(' - ')[1]}`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+
+            // Cria o link de download e exibe na tela
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "cargas_treino.csv");
+            link.innerText = "Clique aqui para baixar o CSV";
+            document.body.appendChild(link);
+        }
+
+        // Evento para gerar o link de download
+        downloadCSVButton.addEventListener('click', generateCSVLink);
+
+
+        // Carregar dados do localStorage ao iniciar a página
+        window.onload = loadFromLocalStorage;
+    </script>
+</body>
+
+</html>
