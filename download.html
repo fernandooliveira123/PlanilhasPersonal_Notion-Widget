@@ -4,10 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baixar CSV</title>
+    <style>
+        .box-download {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+        }
+
+        .box-download h1 {
+            font-size: 2rem;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .box-download button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            background-color: orange;
+            border: solid 1px black;
+            border-radius: 10px;
+        }
+
+        .box-download button:hover {
+            transform: scale(1.1);
+            background-color: limegreen;
+            transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        }
+
+        footer {
+            text-align: center;
+            font-size: small;
+        }
+    </style>
 </head>
 <body>
-    <h1>Baixar CSV</h1>
-    <button id="downloadButton">Baixar CSV</button>
+    <div class="box-download">
+        <h1>Baixar CSV</h1>
+        <button id="downloadButton">Baixar CSV</button>
+    </div>
+    <footer>
+        <p>Este é um conteúdo protegido por direitos autorais &#xa9 Planilhas Personal Trainer- @PlanilhaspersonalTrainer</p>
+    </footer>
 
     <script>
         // Extrair dados do CSV da URL (se enviados por query string)
