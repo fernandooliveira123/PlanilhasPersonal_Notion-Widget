@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Avaliação Postural</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Avaliação Postural</h1>
+
+    <form id="upload-form">
+      <label for="upload-input" id="upload-label">Selecionar imagem</label>
+      <input type="file" id="upload-input" accept="image/*">
+    </form>
+
+    <div id="preview"></div>
+
+    <a id="download-button" download="imagem_com_grade.png">Baixar Imagem com Grade</a>
+  </div>
+
+
   <style>
     /* Estilos CSS */
     .container {
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
+      background-color: rgb(0, 87, 128);
     }
 
     h1 {
       text-align: center;
+      color: white;
     }
 
     #upload-form {
@@ -33,7 +53,8 @@
     #preview {
       margin-top: 20px;
       text-align: center;
-      position: relative; /* Adicionado para posicionar o fio de prumo e as linhas corretamente */
+      position: relative;
+      /* Adicionado para posicionar o fio de prumo e as linhas corretamente */
     }
 
     #preview img {
@@ -56,9 +77,10 @@
       left: 0;
       right: 0;
       height: 1px;
-      background-color: black;
+      background-color: rgb(164, 11, 11);
       opacity: 0.5;
-      z-index: 1; /* Adicionado para garantir que as linhas fiquem à frente da foto */
+      z-index: 1;
+      /* Adicionado para garantir que as linhas fiquem à frente da foto */
     }
 
     #download-button {
@@ -71,20 +93,7 @@
       cursor: pointer;
     }
   </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Avaliação Postural</h1>
 
-    <form id="upload-form">
-      <label for="upload-input" id="upload-label">Selecionar imagem</label>
-      <input type="file" id="upload-input" accept="image/*">
-    </form>
-
-    <div id="preview"></div>
-
-    <a id="download-button" download="imagem_com_grade.png">Baixar Imagem com Grade</a>
-  </div>
 
   <script>
     // JavaScript para manipular o upload da imagem e exibir a prévia
@@ -95,13 +104,13 @@
     plumbLine.id = 'plumb-line';
     const downloadButton = document.getElementById('download-button');
 
-    uploadInput.addEventListener('change', function(e) {
+    uploadInput.addEventListener('change', function (e) {
       const file = e.target.files[0];
       const reader = new FileReader();
 
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const image = new Image();
-        image.onload = function() {
+        image.onload = function () {
           preview.innerHTML = '';
           preview.appendChild(image);
 
@@ -121,7 +130,7 @@
           }
 
           // Adicionar manipulador de evento para o botão de download
-          downloadButton.addEventListener('click', function() {
+          downloadButton.addEventListener('click', function () {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             canvas.width = image.width;
@@ -132,7 +141,7 @@
 
             // Desenhar as linhas da grade na tela de desenho
             const gridLines = preview.querySelectorAll('.grid-line');
-            gridLines.forEach(function(line) {
+            gridLines.forEach(function (line) {
               context.fillStyle = line.style.backgroundColor;
               context.fillRect(0, parseFloat(line.style.top), image.width, 1);
             });
@@ -159,4 +168,5 @@
     });
   </script>
 </body>
+
 </html>
