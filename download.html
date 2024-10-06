@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baixar CSV</title>
+</head>
+<body>
+    <h1>Baixar CSV</h1>
+    <button id="downloadButton">Baixar CSV</button>
+
+    <script>
+        // Extrair dados do CSV da URL (se enviados por query string)
+        const urlParams = new URLSearchParams(window.location.search);
+        const csvData = urlParams.get('data'); // Dados recebidos via URL
+
+        function downloadCSV() {
+            const csvContent = "data:text/csv;charset=utf-8," + decodeURIComponent(csvData);
+            const link = document.createElement("a");
+            link.setAttribute("href", csvContent);
+            link.setAttribute("download", "cargas_treino.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('downloadButton').addEventListener('click', downloadCSV);
+    </script>
+</body>
+</html>

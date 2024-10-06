@@ -252,34 +252,37 @@
         });
 
         // Função para gerar e baixar o arquivo CSV
-        // Função para criar um link de download e permitir o usuário clicar manualmente
-        function generateCSVLink() {
+        // Função para gerar o CSV corretamente formatado em UTF-8 com BOM
+        function generateCSVAndRedirect() {
             if (exerciseData.length === 0 || weightsData.length === 0) {
                 alert("Sem dados para baixar.");
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Exercício,Carga (kg),Data\n";
+            // Gerar o CSV com separador de ponto e vírgula
+            let csvContent = "Exercício;Carga (kg);Data\n"; // Usando ponto e vírgula como delimitador
 
             exerciseData.forEach((exercise, index) => {
-                const row = `${exercise},${weightsData[index]},${labelsData[index].split(' - ')[1]}`;
-                csvContent += row + "\n";
+                const row = `${exercise};${weightsData[index]};${labelsData[index].split(' - ')[1]}`;
+                csvContent += row + "\n"; // Adicionando uma nova linha após cada registro
             });
 
-            const encodedUri = encodeURI(csvContent);
+            // Adicionando o BOM (Byte Order Mark) para UTF-8
+            const bom = '\uFEFF'; // BOM para UTF-8
+            const finalCSV = bom + csvContent; // Pré-pendendo o BOM ao conteúdo do CSV
 
-            // Cria o link de download e exibe na tela
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "cargas_treino.csv");
-            link.innerText = "Clique aqui para baixar o CSV";
-            document.body.appendChild(link);
+            // Serializar os dados CSV para a URL
+            const encodedCSV = encodeURIComponent(finalCSV);
+
+            // URL da página de download no GitHub Pages
+            const githubPagesURL = `https://fernandooliveira123.github.io/PlanilhasPersonal_Notion-Widget/download.html?data=${encodedCSV}`;
+
+            // Abrir a URL em uma nova aba
+            window.open(githubPagesURL, '_blank');
         }
 
-        // Evento para gerar o link de download
-        downloadCSVButton.addEventListener('click', generateCSVLink);
-
+        // Evento para gerar e redirecionar o download
+        downloadCSVButton.addEventListener('click', generateCSVAndRedirect);
 
         // Carregar dados do localStorage ao iniciar a página
         window.onload = loadFromLocalStorage;
