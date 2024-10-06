@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Física</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        #evaluationForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* label {
+            display: block;
+        } */
+
+        select {
+            width: 50%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn {
+            /* width: 100%; */
+            padding: 10px 10px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 15px 0;
+            text-transform: uppercase;
+        }
+
+
+        .form-dg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .form-pm {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 85%;
+        }
+
+        .form-box {
+            display: flex;
+            flex-direction: column;
+            /* align-items: center; */
+            gap: 5px;
+            width: 206px;
+            margin-bottom: 15px;
+        }
+
+        .form-box label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .form-box input {
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        h3 {
+            text-align: center;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        input {
+            height: 40px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-box2 {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Avaliação Física</h1>
+
+        <form id="evaluationForm">
+            <h2>Dados Gerais</h2>
+            <div class="form-dg">
+
+                <div class="form-box">
+                    <label for="weight">Peso (kg):</label>
+                    <input type="number" id="weight" step="0.01" placeholder="Ex: 70.5" required>
+                </div>
+
+                <div class="form-box">
+                    <label for="height">Estatura (cm):</label>
+                    <input type="number" id="height" placeholder="Ex: 175" required>
+                </div>
+
+                <div class="form-box">
+                    <label for="age">Idade:</label>
+                    <input type="number" id="age" placeholder="Ex: 25" required>
+                </div>
+            </div>
+
+            <h2>Perimetria</h2>
+            <div class="form-pm">
+                <div class="form-box">
+                    <label for="shoulders">Ombros (cm):</label>
+                    <input type="number" id="shoulders" step="0.1" placeholder="Ex: 110.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="chest">Peitoral (cm):</label>
+                    <input type="number" id="chest" step="0.1" placeholder="Ex: 100.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="armRight">Braço Direito (cm):</label>
+                    <input type="number" id="armRight" step="0.1" placeholder="Ex: 34.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="armLeft">Braço Esquerdo (cm):</label>
+                    <input type="number" id="armLeft" step="0.1" placeholder="Ex: 34.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="waist">Cintura (cm):</label>
+                    <input type="number" id="waist" step="0.1" placeholder="Ex: 80.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="hip">Quadril (cm):</label>
+                    <input type="number" id="hip" step="0.1" placeholder="Ex: 95.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="legRight">Perna Direita (cm):</label>
+                    <input type="number" id="legRight" step="0.1" placeholder="Ex: 50.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="legLeft">Perna Esquerda (cm):</label>
+                    <input type="number" id="legLeft" step="0.1" placeholder="Ex: 50.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="calfRight">Panturrilha Direita (cm):</label>
+                    <input type="number" id="calfRight" step="0.1" placeholder="Ex: 35.5">
+                </div>
+
+                <div class="form-box">
+                    <label for="calfLeft">Panturrilha Esquerda (cm):</label>
+                    <input type="number" id="calfLeft" step="0.1" placeholder="Ex: 35.5">
+                </div>
+
+            </div>
+
+
+
+            <label for="sex">Sexo:</label>
+            <select id="sex" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="male">Masculino</option>
+                <option value="female">Feminino</option>
+            </select>
+
+            <div id="skinfolds"></div>
+
+            <div class="btn-box">
+                <button class="btn" type="submit">Calcular</button>
+                <button class="btn" type="button" onclick="gerarPDF()">Baixar PDF</button>
+                <button class="btn" type="button" onclick="downloadCSV()">Baixar CSV</button>
+            </div>
+
+
+        </form>
+
+
+        <h2>Resultados</h2>
+        <p id="resultadoIMC"></p>
+        <p id="resultadoRCQ"></p>
+        <p id="resultadoPercentualGordura"></p>
+    </div>
+
+    <script>
+        document.getElementById('sex').addEventListener('change', updateSkinfolds);
+        document.getElementById('evaluationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            calcularResultados();
+        });
+
+        function updateSkinfolds() {
+            const sex = document.getElementById('sex').value;
+            const skinfoldsContainer = document.getElementById('skinfolds');
+            skinfoldsContainer.innerHTML = ''; // Limpa os campos anteriores
+
+            if (sex === 'male') {
+                skinfoldsContainer.innerHTML = `
+                    <h3>Dobras Cutâneas Masculinas</h3>
+                    <div class="form-dg">
+                        <div class="form-box">
+                            <label for="chestSkinfold">Peitoral (mm):</label>
+                            <input type="number" id="chestSkinfold" step="0.1" placeholder="Ex: 12.5">
+                        </div>
+                        <div class="form-box">
+                            <label for="abdominalSkinfold">Abdominal (mm):</label>
+                            <input type="number" id="abdominalSkinfold" step="0.1" placeholder="Ex: 25.5">
+                        </div>
+                        <div class="form-box">
+                            <label for="thighSkinfold">Coxa (mm):</label>
+                            <input type="number" id="thighSkinfold" step="0.1" placeholder="Ex: 15.5">
+                        </div>
+                    </div>
+                `;
+            } else if (sex === 'female') {
+                skinfoldsContainer.innerHTML = `
+                    <h3>Dobras Cutâneas Femininas</h3>
+                    <div class="form-dg">
+                        <div class="form-box">
+                            <label for="tricepsSkinfold">Tríceps (mm):</label>
+                            <input type="number" id="tricepsSkinfold" step="0.1" placeholder="Ex: 18.5">
+                        </div>
+                        <div class="form-box">
+                            <label for="suprailiacSkinfold">Supra-ilíaca (mm):</label>
+                            <input type="number" id="suprailiacSkinfold" step="0.1" placeholder="Ex: 20.5">
+                        </div>
+                        <div class="form-box">
+                            <label for="thighSkinfold">Coxa (mm):</label>
+                            <input type="number" id="thighSkinfold" step="0.1" placeholder="Ex: 22.5">
+                        </div>
+                    </div>
+                    </div>
+                `;
+            }
+        }
+
+        function calcularResultados() {
+            const peso = parseFloat(document.getElementById('weight').value);
+            const altura = parseFloat(document.getElementById('height').value) / 100; // Convertendo de cm para metros
+            const cintura = parseFloat(document.getElementById('waist').value);
+            const quadril = parseFloat(document.getElementById('hip').value);
+            const sexo = document.getElementById('sex').value;
+
+            // Coletando a soma das dobras cutâneas
+            let somadobras = 0;
+            if (sexo === 'male') {
+                somadobras += parseFloat(document.getElementById('chestSkinfold').value) || 0;
+                somadobras += parseFloat(document.getElementById('abdominalSkinfold').value) || 0;
+                somadobras += parseFloat(document.getElementById('thighSkinfold').value) || 0;
+            } else {
+                somadobras += parseFloat(document.getElementById('tricepsSkinfold').value) || 0;
+                somadobras += parseFloat(document.getElementById('suprailiacSkinfold').value) || 0;
+                somadobras += parseFloat(document.getElementById('thighSkinfold').value) || 0;
+            }
+
+            const idade = parseInt(document.getElementById('age').value); // Coletando a idade do usuário
+
+            // Calculando o IMC
+            const imc = calcularIMC(peso, altura);
+            document.getElementById('resultadoIMC').innerText = `IMC: ${imc}`;
+
+            // Calculando o RCQ (Relação Cintura-Quadril)
+            const rcq = calcularRCQ(cintura, quadril);
+            document.getElementById('resultadoRCQ').innerText = `RCQ: ${rcq}`;
+
+            // Calculando o % de gordura corporal
+            const percentualGordura = calcularPercentualGordura(sexo, somadobras, idade);
+            document.getElementById('resultadoPercentualGordura').innerText = `%G: ${percentualGordura}%`;
+        }
+
+        // Função para calcular o IMC
+        function calcularIMC(peso, altura) {
+            return (peso / (altura * altura)).toFixed(2);
+        }
+
+        // Função para calcular a RCQ
+        function calcularRCQ(cintura, quadril) {
+            return (cintura / quadril).toFixed(2);
+        }
+
+        // Função para calcular o % de gordura com Pollock
+        // Função para calcular o % de gordura com Pollock
+        function calcularPercentualGordura(sexo, somadobras, idade) {
+            let densidadeCorporal;
+            if (sexo === 'male') {
+                densidadeCorporal = 1.112 - (0.00043499 * somadobras) + (0.00000055 * (somadobras ** 2)) - (0.00028826 * idade);
+            } else {
+                densidadeCorporal = 1.097 - (0.00046971 * somadobras) + (0.00000056 * (somadobras ** 2)) - (0.00012828 * idade);
+            }
+            // Corrigindo o cálculo do %G
+            const percentualGordura = (4.95 / densidadeCorporal - 4.50) * 100; // Adicionei a multiplicação por 100
+            return percentualGordura.toFixed(2);
+        }
+
+        async function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+
+            // Cria uma nova instância do jsPDF
+            const doc = new jsPDF();
+
+            // Adiciona conteúdo ao PDF
+            doc.setFontSize(20);
+            doc.text("Avaliação Física", 10, 10);
+
+            doc.setFontSize(14);
+            doc.text(`${document.getElementById('resultadoIMC').innerText}`, 10, 30);
+            doc.text(`${document.getElementById('resultadoRCQ').innerText}`, 10, 40);
+            doc.text(`${document.getElementById('resultadoPercentualGordura').innerText}`, 10, 50);
+
+            // Adiciona medidas de perimetria
+            doc.text(`Peso: ${document.getElementById('weight').value} kg`, 10, 60);
+            doc.text(`Estatura: ${document.getElementById('height').value} cm`, 10, 70);
+            doc.text(`Idade: ${document.getElementById('age').value} anos`, 10, 80);
+
+            // Adiciona dobras cutâneas
+            const sexo = document.getElementById('sex').value;
+            if (sexo === 'male') {
+                doc.text(`Peitoral: ${document.getElementById('chestSkinfold').value} mm`, 10, 90);
+                doc.text(`Abdominal: ${document.getElementById('abdominalSkinfold').value} mm`, 10, 100);
+                doc.text(`Coxa: ${document.getElementById('thighSkinfold').value} mm`, 10, 110);
+            } else {
+                doc.text(`Tríceps: ${document.getElementById('tricepsSkinfold').value} mm`, 10, 90);
+                doc.text(`Supra-ilíaca: ${document.getElementById('suprailiacSkinfold').value} mm`, 10, 100);
+                doc.text(`Coxa: ${document.getElementById('thighSkinfold').value} mm`, 10, 110);
+            }
+
+            // Gera o conteúdo do PDF como blob
+            const pdfBlob = doc.output('blob');
+
+            // Cria um objeto URL para o blob e abre em uma nova aba
+            const blobURL = URL.createObjectURL(pdfBlob);
+            window.open(blobURL, '_blank');
+        }
+
+
+        function downloadCSV() {
+            // Coletar os dados do formulário
+            const peso = document.getElementById('weight').value;
+            const altura = document.getElementById('height').value;
+            const idade = document.getElementById('age').value;
+            const ombros = document.getElementById('shoulders').value;
+            const peitoral = document.getElementById('chest').value;
+            const bracoDireito = document.getElementById('armRight').value;
+            const bracoEsquerdo = document.getElementById('armLeft').value;
+            const cintura = document.getElementById('waist').value;
+            const quadril = document.getElementById('hip').value;
+            const pernaDireita = document.getElementById('legRight').value;
+            const pernaEsquerda = document.getElementById('legLeft').value;
+            const panturrilhaDireita = document.getElementById('calfRight').value;
+            const panturrilhaEsquerda = document.getElementById('calfLeft').value;
+            const sexo = document.getElementById('sex').value;
+
+            // Se houver dobras cutâneas, coletá-las
+            let dobrasCutaneas = '';
+            if (sexo === 'male') {
+                const peitoralDobras = document.getElementById('chestSkinfold').value || '';
+                const abdominalDobras = document.getElementById('abdominalSkinfold').value || '';
+                const coxaDobras = document.getElementById('thighSkinfold').value || '';
+                dobrasCutaneas = `${peitoralDobras},${abdominalDobras},${coxaDobras}`;
+            } else if (sexo === 'female') {
+                const tricepsDobras = document.getElementById('tricepsSkinfold').value || '';
+                const suprailiacaDobras = document.getElementById('suprailiacSkinfold').value || '';
+                const coxaDobras = document.getElementById('thighSkinfold').value || '';
+                dobrasCutaneas = `${tricepsDobras},${suprailiacaDobras},${coxaDobras}`;
+            }
+
+            // Função para gerar o CSV corretamente formatado em UTF-8 com BOM
+            function generateCSVAndRedirect() {
+                // Gerar o CSV com separador de ponto e vírgula
+                let csvContent = "Peso (kg);Estatura (cm);Idade;Ombros (cm);Peitoral (cm);Braço Direito (cm);Braço Esquerdo (cm);Cintura (cm);Quadril (cm);Perna Direita (cm);Perna Esquerda (cm);Panturrilha Direita (cm);Panturrilha Esquerda (cm);Sexo;Dobras Cutâneas\n";
+                csvContent += `${peso};${altura};${idade};${ombros};${peitoral};${bracoDireito};${bracoEsquerdo};${cintura};${quadril};${pernaDireita};${pernaEsquerda};${panturrilhaDireita};${panturrilhaEsquerda};${sexo};${dobrasCutaneas}\n`;
+
+                // Adicionando o BOM (Byte Order Mark) para UTF-8
+                const bom = '\uFEFF'; // BOM para UTF-8
+                const finalCSV = bom + csvContent; // Pré-pendendo o BOM ao conteúdo do CSV
+
+                // Serializar os dados CSV para a URL
+                const encodedCSV = encodeURIComponent(finalCSV);
+
+                // URL da página de download no GitHub Pages
+                const githubPagesURL = `https://fernandooliveira123.github.io/PlanilhasPersonal_Notion-Widget/download.html?data=${encodedCSV}`;
+
+                // Abrir a URL em uma nova aba
+                window.open(githubPagesURL, '_blank');
+            }
+
+            generateCSVAndRedirect();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Gráficos CSV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Gerador de Gráficos</h1>
+
+        <!-- Upload do arquivo CSV -->
+        <input type="file" id="csvFileInput" accept=".csv">
+        <button onclick="processarCSV()">Processar CSV</button>
+
+        <!-- Área para exibir o gráfico -->
+        <canvas id="grafico" width="400" height="200"></canvas>
+
+        <!-- Botões para download -->
+        <button onclick="downloadPDF()">Baixar Gráfico em PDF</button>
+        <button onclick="downloadCSVAndRedirect()">Baixar CSV</button>
+    </div>
+
+    <style>
+        /* Estilização básica para a página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container principal */
+        .container {
+            background-color: #fff;
+            /* Fundo branco para dar ênfase ao conteúdo */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Sombra leve */
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Título */
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Estilização do input e botão de upload de CSV */
+        input[type="file"] {
+            display: block;
+            margin: 0 auto 20px auto;
+            font-size: 16px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Alterar cor ao passar o mouse sobre o botão */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Canvas do gráfico */
+        canvas {
+            background-color: #fff;
+            /* Fundo branco para o gráfico */
+            margin: 20px auto;
+            display: block;
+            max-width: 100%;
+            height: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        /* Espaçamento entre os botões */
+        button {
+            margin: 5% 0;
+            width: 50%;
+        }
+
+        /* Responsividade */
+        @media (max-width: 400px) {
+            .container {
+                padding: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        let chart; // Variável para armazenar o gráfico
+        let csvData; // Variável para armazenar os dados do CSV
+
+        function processarCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const text = e.target.result;
+                csvData = Papa.parse(text, { header: true }).data; // Parse CSV com PapaParse
+
+                // Extrai os labels da primeira coluna
+                const labels = csvData.map(row => Object.values(row)[0]);
+
+                // Extrai dados das colunas subsequentes
+                const datasets = [];
+                const headers = Object.keys(csvData[0]);
+
+                for (let i = 1; i < headers.length; i++) {
+                    const data = csvData.map(row => parseFloat(Object.values(row)[i]));
+                    datasets.push({
+                        label: headers[i],
+                        data: data,
+                        backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`,
+                        borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
+                        borderWidth: 1
+                    });
+                }
+
+                gerarGrafico(labels, datasets);
+            };
+
+            reader.readAsText(file);
+        }
+
+        function gerarGrafico(labels, datasets) {
+            const ctx = document.getElementById('grafico').getContext('2d');
+            if (chart) {
+                chart.destroy(); // Destroi gráfico anterior antes de criar um novo
+            }
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text("Gráfico de Dados CSV", 10, 10);
+
+            // Obtém o gráfico como uma imagem
+            const canvas = document.getElementById('grafico');
+            const imgData = canvas.toDataURL('image/png');
+
+            // Adiciona a imagem ao PDF
+            doc.addImage(imgData, 'PNG', 10, 20, 180, 160);
+
+            // Gera o conteúdo do PDF como um blob
+            const pdfBlob = doc.output('blob');
+
+            // Cria um objeto URL para o blob e abre em uma nova aba
+            const blobURL = URL.createObjectURL(pdfBlob);
+            window.open(blobURL, '_blank');
+        }
+
+
+        function downloadCSVAndRedirect() {
+            // Gerar o CSV a partir de csvData (assumindo que csvData é uma array de objetos)
+            const csvContent = csvData.map(e => Object.values(e).join(",")).join("\n");
+
+            // Adicionar o BOM (Byte Order Mark) para UTF-8
+            const bom = '\uFEFF';
+            const finalCSV = bom + csvContent;
+
+            // Codificar o CSV como parte da URL
+            const encodedCSV = encodeURIComponent(finalCSV);
+
+            // URL da página de download no GitHub Pages
+            const githubPagesURL = `https://fernandooliveira123.github.io/PlanilhasPersonal_Notion-Widget/download.html?data=${encodedCSV}`;
+
+            // Abrir a URL em uma nova aba
+            window.open(githubPagesURL, '_blank');
+        }
+
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</body>
+
+</html>

@@ -8,16 +8,6 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
         .container {
             width: 90%;
             margin: auto;
@@ -27,33 +17,28 @@
             background-color: #f9f9f9;
         }
 
-        #evaluationForm {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h1 {
+        h1,
+        h2 {
             text-align: center;
-            text-transform: uppercase;
         }
 
-        /* label {
+        label {
             display: block;
-        } */
+            margin-top: 10px;
+        }
 
+        input,
         select {
-            width: 50%;
+            width: 100%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        .btn {
-            /* width: 100%; */
-            padding: 10px 10px;
+        button {
+            width: 100%;
+            padding: 10px;
             margin-top: 20px;
             background-color: #28a745;
             color: white;
@@ -65,75 +50,6 @@
         button:hover {
             background-color: #218838;
         }
-
-        h2 {
-            text-align: center;
-            margin: 15px 0;
-            text-transform: uppercase;
-        }
-
-
-        .form-dg {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-
-        .form-pm {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            max-width: 85%;
-        }
-
-        .form-box {
-            display: flex;
-            flex-direction: column;
-            /* align-items: center; */
-            gap: 5px;
-            width: 206px;
-            margin-bottom: 15px;
-        }
-
-        .form-box label {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .form-box input {
-            width: 100%;
-            height: 40px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 5px;
-        }
-
-        h3 {
-            text-align: center;
-            margin: 20px 0;
-            text-transform: uppercase;
-        }
-
-        label {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        input {
-            height: 40px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-box2 {
-            display: flex;
-        }
     </style>
 </head>
 
@@ -143,77 +59,45 @@
 
         <form id="evaluationForm">
             <h2>Dados Gerais</h2>
-            <div class="form-dg">
+            <label for="weight">Peso (kg):</label>
+            <input type="number" id="weight" step="0.01" placeholder="Ex: 70.5" required>
 
-                <div class="form-box">
-                    <label for="weight">Peso (kg):</label>
-                    <input type="number" id="weight" step="0.01" placeholder="Ex: 70.5" required>
-                </div>
+            <label for="height">Estatura (cm):</label>
+            <input type="number" id="height" placeholder="Ex: 175" required>
 
-                <div class="form-box">
-                    <label for="height">Estatura (cm):</label>
-                    <input type="number" id="height" placeholder="Ex: 175" required>
-                </div>
-
-                <div class="form-box">
-                    <label for="age">Idade:</label>
-                    <input type="number" id="age" placeholder="Ex: 25" required>
-                </div>
-            </div>
+            <label for="age">Idade:</label>
+            <input type="number" id="age" placeholder="Ex: 25" required>
 
             <h2>Perimetria</h2>
-            <div class="form-pm">
-                <div class="form-box">
-                    <label for="shoulders">Ombros (cm):</label>
-                    <input type="number" id="shoulders" step="0.1" placeholder="Ex: 110.5">
-                </div>
+            <label for="shoulders">Ombros (cm):</label>
+            <input type="number" id="shoulders" step="0.1" placeholder="Ex: 110.5">
 
-                <div class="form-box">
-                    <label for="chest">Peitoral (cm):</label>
-                    <input type="number" id="chest" step="0.1" placeholder="Ex: 100.5">
-                </div>
+            <label for="chest">Peitoral (cm):</label>
+            <input type="number" id="chest" step="0.1" placeholder="Ex: 100.5">
 
-                <div class="form-box">
-                    <label for="armRight">Braço Direito (cm):</label>
-                    <input type="number" id="armRight" step="0.1" placeholder="Ex: 34.5">
-                </div>
+            <label for="armRight">Braço Direito (cm):</label>
+            <input type="number" id="armRight" step="0.1" placeholder="Ex: 34.5">
 
-                <div class="form-box">
-                    <label for="armLeft">Braço Esquerdo (cm):</label>
-                    <input type="number" id="armLeft" step="0.1" placeholder="Ex: 34.5">
-                </div>
+            <label for="armLeft">Braço Esquerdo (cm):</label>
+            <input type="number" id="armLeft" step="0.1" placeholder="Ex: 34.5">
 
-                <div class="form-box">
-                    <label for="waist">Cintura (cm):</label>
-                    <input type="number" id="waist" step="0.1" placeholder="Ex: 80.5">
-                </div>
+            <label for="waist">Cintura (cm):</label>
+            <input type="number" id="waist" step="0.1" placeholder="Ex: 80.5">
 
-                <div class="form-box">
-                    <label for="hip">Quadril (cm):</label>
-                    <input type="number" id="hip" step="0.1" placeholder="Ex: 95.5">
-                </div>
+            <label for="hip">Quadril (cm):</label>
+            <input type="number" id="hip" step="0.1" placeholder="Ex: 95.0">
 
-                <div class="form-box">
-                    <label for="legRight">Perna Direita (cm):</label>
-                    <input type="number" id="legRight" step="0.1" placeholder="Ex: 50.5">
-                </div>
+            <label for="legRight">Perna Direita (cm):</label>
+            <input type="number" id="legRight" step="0.1" placeholder="Ex: 50.0">
 
-                <div class="form-box">
-                    <label for="legLeft">Perna Esquerda (cm):</label>
-                    <input type="number" id="legLeft" step="0.1" placeholder="Ex: 50.5">
-                </div>
+            <label for="legLeft">Perna Esquerda (cm):</label>
+            <input type="number" id="legLeft" step="0.1" placeholder="Ex: 50.0">
 
-                <div class="form-box">
-                    <label for="calfRight">Panturrilha Direita (cm):</label>
-                    <input type="number" id="calfRight" step="0.1" placeholder="Ex: 35.5">
-                </div>
+            <label for="calfRight">Panturrilha Direita (cm):</label>
+            <input type="number" id="calfRight" step="0.1" placeholder="Ex: 35.0">
 
-                <div class="form-box">
-                    <label for="calfLeft">Panturrilha Esquerda (cm):</label>
-                    <input type="number" id="calfLeft" step="0.1" placeholder="Ex: 35.5">
-                </div>
-
-            </div>
+            <label for="calfLeft">Panturrilha Esquerda (cm):</label>
+            <input type="number" id="calfLeft" step="0.1" placeholder="Ex: 35.0">
 
 
 
@@ -226,11 +110,9 @@
 
             <div id="skinfolds"></div>
 
-            <div class="btn-box">
-                <button class="btn" type="submit">Calcular</button>
-                <button class="btn" type="button" onclick="gerarPDF()">Baixar PDF</button>
-                <button class="btn" type="button" onclick="downloadCSV()">Baixar CSV</button>
-            </div>
+            <button type="submit">Calcular</button>
+            <button type="button" onclick="gerarPDF()">Baixar PDF</button>
+            <button type="button" onclick="downloadCSV()">Baixar CSV</button>
 
 
         </form>
@@ -257,39 +139,22 @@
             if (sex === 'male') {
                 skinfoldsContainer.innerHTML = `
                     <h3>Dobras Cutâneas Masculinas</h3>
-                    <div class="form-dg">
-                        <div class="form-box">
-                            <label for="chestSkinfold">Peitoral (mm):</label>
-                            <input type="number" id="chestSkinfold" step="0.1" placeholder="Ex: 12.5">
-                        </div>
-                        <div class="form-box">
-                            <label for="abdominalSkinfold">Abdominal (mm):</label>
-                            <input type="number" id="abdominalSkinfold" step="0.1" placeholder="Ex: 25.5">
-                        </div>
-                        <div class="form-box">
-                            <label for="thighSkinfold">Coxa (mm):</label>
-                            <input type="number" id="thighSkinfold" step="0.1" placeholder="Ex: 15.5">
-                        </div>
-                    </div>
+                    <label for="chestSkinfold">Peitoral (mm):</label>
+                    <input type="number" id="chestSkinfold" step="0.1" placeholder="Ex: 12.5">
+                    <label for="abdominalSkinfold">Abdominal (mm):</label>
+                    <input type="number" id="abdominalSkinfold" step="0.1" placeholder="Ex: 25.5">
+                    <label for="thighSkinfold">Coxa (mm):</label>
+                    <input type="number" id="thighSkinfold" step="0.1" placeholder="Ex: 15.5">
                 `;
             } else if (sex === 'female') {
                 skinfoldsContainer.innerHTML = `
                     <h3>Dobras Cutâneas Femininas</h3>
-                    <div class="form-dg">
-                        <div class="form-box">
-                            <label for="tricepsSkinfold">Tríceps (mm):</label>
-                            <input type="number" id="tricepsSkinfold" step="0.1" placeholder="Ex: 18.5">
-                        </div>
-                        <div class="form-box">
-                            <label for="suprailiacSkinfold">Supra-ilíaca (mm):</label>
-                            <input type="number" id="suprailiacSkinfold" step="0.1" placeholder="Ex: 20.5">
-                        </div>
-                        <div class="form-box">
-                            <label for="thighSkinfold">Coxa (mm):</label>
-                            <input type="number" id="thighSkinfold" step="0.1" placeholder="Ex: 22.5">
-                        </div>
-                    </div>
-                    </div>
+                    <label for="tricepsSkinfold">Tríceps (mm):</label>
+                    <input type="number" id="tricepsSkinfold" step="0.1" placeholder="Ex: 18.5">
+                    <label for="suprailiacSkinfold">Supra-ilíaca (mm):</label>
+                    <input type="number" id="suprailiacSkinfold" step="0.1" placeholder="Ex: 20.5">
+                    <label for="thighSkinfold">Coxa (mm):</label>
+                    <input type="number" id="thighSkinfold" step="0.1" placeholder="Ex: 22.5">
                 `;
             }
         }
@@ -420,44 +285,26 @@
             }
 
             // Gerar o conteúdo CSV
-            // let csvContent = "data:text/csv;charset=utf-8,";
-            // csvContent += "Peso (kg),Estatura (cm),Idade,Ombros (cm),Peitoral (cm),Braço Direito (cm),Braço Esquerdo (cm),Cintura (cm),Quadril (cm),Perna Direita (cm),Perna Esquerda (cm),Panturrilha Direita (cm),Panturrilha Esquerda (cm),Sexo,Dobras Cutâneas\n";
-            // csvContent += `${peso},${altura},${idade},${ombros},${peitoral},${bracoDireito},${bracoEsquerdo},${cintura},${quadril},${pernaDireita},${pernaEsquerda},${panturrilhaDireita},${panturrilhaEsquerda},${sexo},${dobrasCutaneas}\n`;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Peso (kg),Estatura (cm),Idade,Ombros (cm),Peitoral (cm),Braço Direito (cm),Braço Esquerdo (cm),Cintura (cm),Quadril (cm),Perna Direita (cm),Perna Esquerda (cm),Panturrilha Direita (cm),Panturrilha Esquerda (cm),Sexo,Dobras Cutâneas\n";
+            csvContent += `${peso},${altura},${idade},${ombros},${peitoral},${bracoDireito},${bracoEsquerdo},${cintura},${quadril},${pernaDireita},${pernaEsquerda},${panturrilhaDireita},${panturrilhaEsquerda},${sexo},${dobrasCutaneas}\n`;
 
-            // // Criar um link para download
-            // const encodedUri = encodeURI(csvContent);
-            // const link = document.createElement("a");
-            // link.setAttribute("href", encodedUri);
-            // link.setAttribute("download", "avaliacao_fisica.csv");
-            // document.body.appendChild(link);
+            // Criar um link para download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "avaliacao_fisica.csv");
+            document.body.appendChild(link);
 
-            // // Acionar o download
-            // link.click();
+            // Acionar o download
+            link.click();
 
-            // // Remover o link após o download
-            // document.body.removeChild(link);
-
-            // Função para gerar o CSV corretamente formatado em UTF-8 com BOM
-            function generateCSVAndRedirect() {
-                // Gerar o CSV com separador de ponto e vírgula
-                let csvContent = "Peso (kg);Estatura (cm);Idade;Ombros (cm);Peitoral (cm);Braço Direito (cm);Braço Esquerdo (cm);Cintura (cm);Quadril (cm);Perna Direita (cm);Perna Esquerda (cm);Panturrilha Direita (cm);Panturrilha Esquerda (cm);Sexo;Dobras Cutâneas\n";
-                csvContent += `${peso};${altura};${idade};${ombros};${peitoral};${bracoDireito};${bracoEsquerdo};${cintura};${quadril};${pernaDireita};${pernaEsquerda};${panturrilhaDireita};${panturrilhaEsquerda};${sexo};${dobrasCutaneas}\n`;
-
-                // Adicionando o BOM (Byte Order Mark) para UTF-8
-                const bom = '\uFEFF'; // BOM para UTF-8
-                const finalCSV = bom + csvContent; // Pré-pendendo o BOM ao conteúdo do CSV
-
-                // Serializar os dados CSV para a URL
-                const encodedCSV = encodeURIComponent(finalCSV);
-
-                // URL da página de download no GitHub Pages
-                const githubPagesURL = `https://fernandooliveira123.github.io/PlanilhasPersonal_Notion-Widget/download.html?data=${encodedCSV}`;
-
-                // Abrir a URL em uma nova aba
-                window.open(githubPagesURL, '_blank');
-            }
-
+            // Remover o link após o download
+            document.body.removeChild(link);
         }
+
+
+
     </script>
 </body>
 
