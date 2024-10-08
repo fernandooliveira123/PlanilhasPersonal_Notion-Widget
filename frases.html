@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frases Motivacionais - Treino</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #111;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: transparent;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #1e1e1e;
+            margin-bottom: auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            color: black;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            background-color: #fff;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Frase Motivacional</h1>
+        <p id="motivational-quote">"A ação é a chave fundamental para todo sucesso." – Pablo Picasso</p>
+        <button onclick="generateQuote()">Nova frase</button>
+    </div>
+
+    <footer>
+        <p>&copy; Planilhas Personal Trainer - @PlanilhaspersonalTrainer</p>
+    </footer>
+
+    <script>
+        const quotes = [
+            "A dor que você sente hoje será a força que você terá amanhã.",
+            "Não pare até se orgulhar de si mesmo.",
+            "Você é mais forte do que imagina.",
+            "A única má escolha é não fazer nada.",
+            "Corpos são feitos na cozinha, músculos são construídos na academia.",
+            "A prática leva à perfeição, continue se esforçando.",
+            "Resultados não vêm da zona de conforto.",
+            "Mente forte, corpo forte.",
+            "Cada treino te leva um passo mais perto do seu objetivo.",
+            "Sem sacrifício não há vitória."
+        ];
+
+        function generateQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById("motivational-quote").innerText = quotes[randomIndex];
+        }
+
+        // Atualiza a frase a cada 30 segundos (30000 milissegundos)
+        setInterval(generateQuote, 30000);
+    </script>
+</body>
+</html>
