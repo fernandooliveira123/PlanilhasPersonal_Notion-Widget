@@ -1,8 +1,10 @@
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var elements = document.querySelectorAll('.notranslate.shadow-cursor-breadcrumb');
-    elements.forEach(function(element) {
-      element.style.display = 'none !important';
-    });
-  });
+  (function() {
+    window.onload = function() {
+      var elements = document.querySelectorAll('.notranslate.shadow-cursor-breadcrumb');
+      elements.forEach(function(element) {
+        element.style.display = 'none';
+      });
+    };
+  })();
 </script>
