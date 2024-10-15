@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Fetcher Widget</title>
+</head>
+<body>
+    <div id="video-container">
+        <p>Carregando vídeo...</p>
+    </div>
+
+    <script>
+        // Função para buscar o link de vídeo na página Notion e exibir
+        function fetchVideoLink() {
+            const links = document.querySelectorAll('a'); // Seleciona todas as tags <a>
+            let videoLink = null;
+
+            // Itera sobre os links para encontrar o vídeo (exemplo para YouTube)
+            links.forEach(link => {
+                if (link.href.includes('youtu.be') || link.href.includes('youtube.com')) {
+                    videoLink = link.href;
+                }
+            });
+
+            // Se encontrar o link do vídeo, carrega o vídeo no container
+            if (videoLink) {
+                const videoContainer = document.getElementById('video-container');
+                videoContainer.innerHTML = `
+                    <iframe width="560" height="315" src="${videoLink.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>
+                `;
+            } else {
+                document.getElementById('video-container').innerHTML = '<p>Nenhum vídeo encontrado.</p>';
+            }
+        }
+
+        // Carrega o vídeo ao carregar a página
+        window.onload = fetchVideoLink;
+    </script>
+</body>
+</html>
