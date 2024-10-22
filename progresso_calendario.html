@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progresso de Tempo</title>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            position: relative;
+            width: 300px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background-color: #007BFF;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+        }
+
+        .progress-label {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="progress-item">
+            <div class="progress-label">Dia: <span id="dayPercentage">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="dayBar"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-label">Semana: <span id="weekPercentage">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="weekBar"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-label">Mês: <span id="monthPercentage">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="monthBar"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-label">Ano: <span id="yearPercentage">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="yearBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculatePercentage(current, total) {
+            return Math.floor((current / total) * 100);
+        }
+
+        function updateProgressBar(barElement, percentageElement, percentage) {
+            barElement.style.width = percentage + '%';
+            percentageElement.textContent = percentage + '%';
+        }
+
+        function updateProgress() {
+            const now = new Date();
+
+            // Cálculo do progresso do dia
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const dayProgress = calculatePercentage(now - startOfDay, endOfDay - startOfDay);
+            updateProgressBar(document.getElementById('dayBar'), document.getElementById('dayPercentage'), dayProgress);
+
+            // Cálculo do progresso da semana
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            const endOfWeek = new Date(now.setDate(startOfWeek.getDate() + 7));
+            const weekProgress = calculatePercentage(new Date() - startOfWeek, endOfWeek - startOfWeek);
+            updateProgressBar(document.getElementById('weekBar'), document.getElementById('weekPercentage'), weekProgress);
+
+            // Cálculo do progresso do mês
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            const monthProgress = calculatePercentage(now - startOfMonth, endOfMonth - startOfMonth);
+            updateProgressBar(document.getElementById('monthBar'), document.getElementById('monthPercentage'), monthProgress);
+
+            // Cálculo do progresso do ano
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+            const yearProgress = calculatePercentage(now - startOfYear, endOfYear - startOfYear);
+            updateProgressBar(document.getElementById('yearBar'), document.getElementById('yearPercentage'), yearProgress);
+        }
+
+        setInterval(updateProgress, 1000);
+        updateProgress();
+    </script>
+
+</body>
+
+</html>
