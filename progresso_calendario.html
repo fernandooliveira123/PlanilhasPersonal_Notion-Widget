@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evolução - Responsivo</title>
+    <title>Evolução - Responsivo e Automático</title>
     <style>
         body {
             background-color: transparent;
@@ -107,9 +107,9 @@
 
         function getWeekProgress() {
             const today = new Date();
-            const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Sunday start
+            const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Domingo
             const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday end
+            endOfWeek.setDate(startOfWeek.getDate() + 6); // Sábado
 
             const totalWeekTime = endOfWeek - startOfWeek;
             const currentTime = Date.now() - startOfWeek;
@@ -135,28 +135,31 @@
         }
 
         function updateProgress() {
-            // Dia
+            // Atualiza o progresso do Dia
             const dayProgress = getDayProgress();
             document.getElementById('dayProgress').style.width = dayProgress + '%';
             document.getElementById('dayProgressText').textContent = dayProgress + '%';
 
-            // Semana
+            // Atualiza o progresso da Semana
             const weekProgress = getWeekProgress();
             document.getElementById('weekProgress').style.width = weekProgress + '%';
             document.getElementById('weekProgressText').textContent = weekProgress + '%';
 
-            // Mês
+            // Atualiza o progresso do Mês
             const monthProgress = getMonthProgress();
             document.getElementById('monthProgress').style.width = monthProgress + '%';
             document.getElementById('monthProgressText').textContent = monthProgress + '%';
 
-            // Ano
+            // Atualiza o progresso do Ano
             const yearProgress = getYearProgress();
             document.getElementById('yearProgress').style.width = yearProgress + '%';
             document.getElementById('yearProgressText').textContent = yearProgress + '%';
         }
 
-        // Atualizar o progresso ao carregar a página
+        // Chama a função updateProgress automaticamente a cada 1 segundo (1000 ms)
+        setInterval(updateProgress, 1000);
+
+        // Atualiza o progresso ao carregar a página
         window.onload = updateProgress;
     </script>
 
