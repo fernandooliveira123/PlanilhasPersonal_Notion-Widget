@@ -18,11 +18,17 @@
 
     <div id="preview"></div>
 
+    <label class="date-picker">Selecione a data:</label>
+    <input type="date" id="date-picker">
+
+    <textarea id="observations" placeholder="Escreva aqui suas observações..."></textarea>
+
     <a id="download-button" download="imagem_com_grade.png">Baixar Imagem com Grade</a>
   </div>
   <footer>
-    Direitos autorais reservados &copy Planilhas Personal Trainer
+    Direitos autorais reservados &copy; Planilhas Personal Trainer
   </footer>
+
   <style>
     /* Estilos CSS */
     .container {
@@ -53,11 +59,18 @@
       cursor: pointer;
     }
 
+    .date-picker {
+      background-color: yellow;
+      border: 1px solid rgb(99, 99, 99);
+      padding: 3px;
+    }
+
+
+
     #preview {
       margin-top: 20px;
       text-align: center;
       position: relative;
-      /* Adicionado para posicionar o fio de prumo e as linhas corretamente */
     }
 
     #preview img {
@@ -83,7 +96,25 @@
       background-color: rgb(164, 11, 11);
       opacity: 0.5;
       z-index: 1;
-      /* Adicionado para garantir que as linhas fiquem à frente da foto */
+    }
+
+    #date-picker {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    #observations {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      resize: vertical;
     }
 
     #download-button {
@@ -97,16 +128,9 @@
     }
 
     footer {
-      font-size: small;
-      color: #ccc;
       text-align: center;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: rgb(0, 87, 128);
     }
   </style>
-
 
   <script>
     const uploadInput = document.getElementById('upload-input');
@@ -114,6 +138,8 @@
     const plumbLine = document.createElement('div');
     plumbLine.id = 'plumb-line';
     const downloadButton = document.getElementById('download-button');
+    const observations = document.getElementById('observations');
+    const datePicker = document.getElementById('date-picker');
     let isDragging = false;
     let startX, startY, imgX = 0, imgY = 0;
 
@@ -177,30 +203,44 @@
 
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = image.width;
-            canvas.height = image.height;
+            const imageElement = preview.querySelector('img');
 
-            // Desenhar a imagem na tela de desenho
-            context.drawImage(image, imgX, imgY, image.width, image.height);
+            // Configurar o canvas com o tamanho da imagem
+            canvas.width = imageElement.naturalWidth;
+            canvas.height = imageElement.naturalHeight + 150; // Espaço extra para texto
 
-            // Desenhar a linha vertical (fio de prumo) no centro
-            const plumbLineX = canvas.width / 2; // Calcula o centro da imagem
+            // Desenhar a imagem no canvas
+            context.drawImage(imageElement, 0, 0, canvas.width, imageElement.naturalHeight);
+
+            // Adicionar a linha vertical (fio de prumo)
             context.strokeStyle = 'red';
             context.lineWidth = 2;
             context.beginPath();
-            context.moveTo(plumbLineX, 0);
-            context.lineTo(plumbLineX, canvas.height);
+            context.moveTo(canvas.width / 2, 0);
+            context.lineTo(canvas.width / 2, imageElement.naturalHeight);
             context.stroke();
 
+            // Adicionar as linhas horizontais
+            const numLines = 20;
+            const interval = imageElement.naturalHeight / (numLines + 1);
 
+            context.strokeStyle = 'black';
+            context.lineWidth = 1;
+            for (let i = 1; i <= numLines; i++) {
+              const y = interval * i;
+              context.beginPath();
+              context.moveTo(0, y);
+              context.lineTo(canvas.width, y);
+              context.stroke();
+            }
 
-
-            // Desenhar as linhas da grade na tela de desenho
-            const gridLines = preview.querySelectorAll('.grid-line');
-            gridLines.forEach(function (line) {
-              context.fillStyle = line.style.backgroundColor || 'black'; // Cor das linhas
-              context.fillRect(0, parseFloat(line.style.top), image.width, 1);
-            });
+            // Adicionar a data e as observações
+            const dateValue = datePicker.value || 'Data não selecionada';
+            context.font = '16px Arial';
+            context.fillStyle = 'black';
+            context.fillText(`Data: ${dateValue}`, 10, imageElement.naturalHeight + 30);
+            context.fillText('Observações:', 10, imageElement.naturalHeight + 60);
+            context.fillText(observations.value, 10, imageElement.naturalHeight + 90);
 
             const downloadURL = canvas.toDataURL('image/png');
             const newTab = window.open();
