@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <script src="https://kit.fontawesome.com/9c67c46016.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Física</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* CSS Básico */
+        .container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        .evaluation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .evaluation-actions button {
+            margin-left: 5px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: small;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Avaliação Física</h1>
+
+        <!-- Seleção de Aluno -->
+        <div>
+            <label for="studentSelect">Selecione um Aluno:</label>
+            <select id="studentSelect">
+                <option value="" disabled selected>Selecione ou adicione um novo aluno</option>
+            </select>
+            <button type="button" onclick="adicionarNovoAluno()">
+                <i class="fas fa-user-plus"></i> Adicionar Novo Aluno
+            </button>
+        </div>
+
+        <!-- Formulário de Avaliação -->
+        <form id="evaluationForm" style="display: none;">
+            <h2>Dados Gerais</h2>
+            <label for="name">Nome do Aluno:</label>
+            <input type="text" id="name" placeholder="Nome do aluno" readonly>
+
+            <label for="weight">Peso (kg):</label>
+            <input type="number" id="weight" step="0.01" placeholder="Ex: 70.5" required>
+
+            <label for="height">Estatura (cm):</label>
+            <input type="number" id="height" step="0.01" placeholder="Ex: 175" required>
+
+            <button type="submit">
+                <i class="fas fa-save"></i> Salvar Avaliação
+            </button>
+
+        </form>
+
+        <!-- Resultados -->
+        <div id="results" class="result-container" style="display: none;">
+            <h2>Avaliações do Aluno</h2>
+            <ul id="evaluationList" class="evaluation-list"></ul>
+
+            <div class="evaluation-actions">
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy Direitos Reseverados Planilhas Personal Trainer
+    </footer>
+
+    <script>
+        const alunos = JSON.parse(localStorage.getItem('alunos')) || {};
+        const studentSelect = document.getElementById('studentSelect');
+        const evaluationForm = document.getElementById('evaluationForm');
+        const results = document.getElementById('results');
+        const evaluationList = document.getElementById('evaluationList');
+        let alunoAtual = '';
+        let avaliacaoEditando = null;
+
+        function carregarAlunos() {
+            studentSelect.innerHTML = `<option value="" disabled selected>Selecione ou adicione um novo aluno</option>`;
+            Object.keys(alunos).forEach(nome => {
+                const option = document.createElement('option');
+                option.value = nome;
+                option.textContent = nome;
+                studentSelect.appendChild(option);
+            });
+        }
+
+        function adicionarNovoAluno() {
+            const nome = prompt("Digite o nome do novo aluno:");
+            if (nome && !alunos[nome]) {
+                alunos[nome] = [];
+                localStorage.setItem('alunos', JSON.stringify(alunos));
+                carregarAlunos();
+                studentSelect.value = nome;
+                mostrarFormulario(nome);
+            } else if (alunos[nome]) {
+                alert("Aluno já existente!");
+            }
+        }
+
+        function mostrarFormulario(nome) {
+            alunoAtual = nome;
+            evaluationForm.style.display = "block";
+            results.style.display = "block";
+            evaluationForm.reset();
+            document.getElementById('name').value = nome;
+            carregarAvaliacoes(nome);
+        }
+
+        function carregarAvaliacoes(nome) {
+            evaluationList.innerHTML = ''; // Limpa a lista antes de carregar
+            alunos[nome].forEach((avaliacao, index) => {
+                const li = document.createElement('li');
+                li.className = "evaluation-item";
+
+                // Adiciona o conteúdo dinâmico com os botões
+                li.innerHTML = `
+            <span>Avaliação ${index + 1}: Peso: ${avaliacao.weight} kg, Estatura: ${avaliacao.height} cm, IMC: ${avaliacao.imc}</span>
+            <div class="evaluation-actions">
+                <button onclick="editarAvaliacao(${index})"><i class="fas fa-edit"></i> Editar</button>
+                <button onclick="excluirAvaliacao(${index})"><i class="fas fa-trash"></i> Excluir</button>
+            </div>
+        `;
+
+                evaluationList.appendChild(li);
+            });
+        }
+
+
+        function editarAvaliacao(index) {
+            const avaliacao = alunos[alunoAtual][index];
+            document.getElementById('weight').value = avaliacao.weight;
+            document.getElementById('height').value = avaliacao.height;
+            avaliacaoEditando = index;
+            alert("Edite os dados no formulário e clique em 'Salvar Avaliação'");
+        }
+
+        function excluirAvaliacao(index) {
+            if (confirm("Deseja realmente excluir esta avaliação?")) {
+                alunos[alunoAtual].splice(index, 1);
+                localStorage.setItem('alunos', JSON.stringify(alunos));
+                carregarAvaliacoes(alunoAtual);
+            }
+        }
+
+        evaluationForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const peso = parseFloat(document.getElementById('weight').value);
+            const altura = parseFloat(document.getElementById('height').value) / 100; // Converte para metros
+            const imc = (peso / (altura * altura)).toFixed(2);
+
+            const novaAvaliacao = {
+                weight: peso,
+                height: altura * 100, // Em cm
+                imc: imc
+            };
+
+            if (avaliacaoEditando !== null) {
+                alunos[alunoAtual][avaliacaoEditando] = novaAvaliacao;
+                avaliacaoEditando = null;
+            } else {
+                alunos[alunoAtual].push(novaAvaliacao);
+            }
+
+            localStorage.setItem('alunos', JSON.stringify(alunos));
+            carregarAvaliacoes(alunoAtual);
+            evaluationForm.reset();
+        });
+
+        studentSelect.addEventListener('change', function () {
+            const nome = studentSelect.value;
+            if (nome) mostrarFormulario(nome);
+        });
+
+        carregarAlunos();
+    </script>
+</body>
+
+</html>
