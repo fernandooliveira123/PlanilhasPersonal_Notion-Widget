@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planejamento 12 Semanas</title>
+  <style>
+    body {
+      background: #1f1f1f;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #00e676;
+    }
+    .card {
+      background: #2e2e2e;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      max-width: 400px;
+      text-align: center;
+    }
+    input[type="date"] {
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+      background: #444;
+      color: #eee;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #00e676;
+      color: #222;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<h1>🗓️ Ciclo de 12 Semanas</h1>
+
+<div class="card">
+  <label>Data de Início: <input type="date" id="startDate"></label><br>
+  <label>Data de Fim: <input type="date" id="endDate"></label><br>
+  <button onclick="saveDates()">Salvar Datas</button>
+</div>
+
+<div class="card" id="cycleStatus">
+  <p>Selecione as datas acima para visualizar o ciclo.</p>
+</div>
+
+<script>
+function saveDates() {
+  const start = document.getElementById('startDate').value;
+  const end = document.getElementById('endDate').value;
+  if (!start || !end) return alert('Selecione ambas as datas!');
+  localStorage.setItem('cycleStart', start);
+  localStorage.setItem('cycleEnd', end);
+  calculateProgress();
+}
+
+function calculateProgress() {
+  const start = new Date(localStorage.getItem('cycleStart'));
+  const end = new Date(localStorage.getItem('cycleEnd'));
+  const now = new Date();
+
+  if (!start || !end || isNaN(start) || isNaN(end)) return;
+
+  const totalMs = end - start;
+  const passedMs = now - start;
+
+  if (now < start) {
+    document.getElementById('cycleStatus').innerHTML = `<p>Seu ciclo começa em ${start.toLocaleDateString()}.</p>`;
+    return;
+  }
+
+  if (now > end) {
+    document.getElementById('cycleStatus').innerHTML = `<p>✅ Ciclo concluído em ${end.toLocaleDateString()}!</p>`;
+    return;
+  }
+
+  const weeksPassed = Math.floor(passedMs / (1000 * 60 * 60 * 24 * 7)) + 1;
+  const totalWeeks = Math.ceil(totalMs / (1000 * 60 * 60 * 24 * 7));
+  const percent = Math.min((passedMs / totalMs) * 100, 100).toFixed(1);
+
+  document.getElementById('cycleStatus').innerHTML = `
+    <p>🗓️ Semana: <strong>${weeksPassed}</strong> de ${totalWeeks}</p>
+    <p>📊 Progresso: <strong>${percent}%</strong> concluído</p>
+  `;
+}
+
+// Carregar ao abrir
+if (localStorage.getItem('cycleStart')) {
+  document.getElementById('startDate').value = localStorage.getItem('cycleStart');
+}
+if (localStorage.getItem('cycleEnd')) {
+  document.getElementById('endDate').value = localStorage.getItem('cycleEnd');
+}
+
+calculateProgress();
+</script>
+
+</body>
+</html>
