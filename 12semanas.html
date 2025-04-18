@@ -43,6 +43,26 @@
       color: #222;
       cursor: pointer;
       font-size: 14px;
+      font-weight: bold;
+    }
+    .progress-bar {
+      width: 100%;
+      background: #444;
+      border-radius: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    .progress {
+      height: 20px;
+      background: #00e676;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .date-display {
+      margin: 10px 0;
+      padding: 8px;
+      background: #333;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -51,63 +71,120 @@
 
 <div class="card">
   <label>Data de Início: <input type="date" id="startDate"></label><br>
-  <label>Data de Fim: <input type="date" id="endDate"></label><br>
-  <button onclick="saveDates()">Salvar Datas</button>
+  <div class="date-display" id="endDateDisplay">Data Final: Selecione a data de início</div>
+  <button onclick="saveDates()">Salvar Ciclo</button>
 </div>
 
 <div class="card" id="cycleStatus">
-  <p>Selecione as datas acima para visualizar o ciclo.</p>
+  <p>Selecione a data de início para visualizar o ciclo.</p>
 </div>
 
 <script>
+function calculateEndDate(startDate) {
+  if (!startDate) return null;
+  
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + (12 * 7) - 1); // 12 semanas - 1 dia (para terminar no último dia da 12ª semana)
+  return endDate;
+}
+
+function updateEndDateDisplay() {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = calculateEndDate(startDate);
+  
+  if (endDate) {
+    const formattedDate = endDate.toISOString().split('T')[0];
+    document.getElementById('endDateDisplay').innerHTML = `
+      Data Final: <strong>${endDate.toLocaleDateString()}</strong>
+      <input type="hidden" id="endDate" value="${formattedDate}">
+    `;
+    calculateProgress();
+  } else {
+    document.getElementById('endDateDisplay').innerHTML = 'Data Final: Selecione a data de início';
+  }
+}
+
 function saveDates() {
   const start = document.getElementById('startDate').value;
-  const end = document.getElementById('endDate').value;
-  if (!start || !end) return alert('Selecione ambas as datas!');
+  const end = document.getElementById('endDate')?.value;
+  
+  if (!start || !end) {
+    alert('Selecione a data de início!');
+    return;
+  }
+  
   localStorage.setItem('cycleStart', start);
   localStorage.setItem('cycleEnd', end);
   calculateProgress();
 }
 
 function calculateProgress() {
-  const start = new Date(localStorage.getItem('cycleStart'));
-  const end = new Date(localStorage.getItem('cycleEnd'));
+  const startStr = localStorage.getItem('cycleStart');
+  const endStr = localStorage.getItem('cycleEnd');
+  
+  if (!startStr || !endStr) {
+    document.getElementById('cycleStatus').innerHTML = `<p>Selecione a data de início para visualizar o ciclo.</p>`;
+    return;
+  }
+  
+  const start = new Date(startStr);
+  const end = new Date(endStr);
   const now = new Date();
 
-  if (!start || !end || isNaN(start) || isNaN(end)) return;
+  if (isNaN(start.getTime())) {
+    document.getElementById('cycleStatus').innerHTML = `<p>⚠️ Data inicial inválida!</p>`;
+    return;
+  }
+  
+  if (isNaN(end.getTime())) {
+    document.getElementById('cycleStatus').innerHTML = `<p>⚠️ Data final inválida!</p>`;
+    return;
+  }
 
   const totalMs = end - start;
   const passedMs = now - start;
 
   if (now < start) {
-    document.getElementById('cycleStatus').innerHTML = `<p>Seu ciclo começa em ${start.toLocaleDateString()}.</p>`;
+    const daysLeft = Math.ceil((start - now) / (1000 * 60 * 60 * 24));
+    document.getElementById('cycleStatus').innerHTML = `
+      <p>⏳ Seu ciclo começa em ${start.toLocaleDateString()} (em ${daysLeft} dias).</p>
+    `;
     return;
   }
 
   if (now > end) {
-    document.getElementById('cycleStatus').innerHTML = `<p>✅ Ciclo concluído em ${end.toLocaleDateString()}!</p>`;
+    document.getElementById('cycleStatus').innerHTML = `
+      <p>✅ Ciclo concluído em ${end.toLocaleDateString()}!</p>
+      <div class="progress-bar"><div class="progress" style="width: 100%"></div></div>
+    `;
     return;
   }
 
   const weeksPassed = Math.floor(passedMs / (1000 * 60 * 60 * 24 * 7)) + 1;
   const totalWeeks = Math.ceil(totalMs / (1000 * 60 * 60 * 24 * 7));
   const percent = Math.min((passedMs / totalMs) * 100, 100).toFixed(1);
+  const daysPassed = Math.floor(passedMs / (1000 * 60 * 60 * 24));
+  const totalDays = Math.ceil(totalMs / (1000 * 60 * 60 * 24));
 
   document.getElementById('cycleStatus').innerHTML = `
     <p>🗓️ Semana: <strong>${weeksPassed}</strong> de ${totalWeeks}</p>
+    <p>📅 Dias: <strong>${daysPassed}</strong> de ${totalDays}</p>
     <p>📊 Progresso: <strong>${percent}%</strong> concluído</p>
+    <div class="progress-bar"><div class="progress" style="width: ${percent}%"></div></div>
   `;
 }
 
 // Carregar ao abrir
-if (localStorage.getItem('cycleStart')) {
-  document.getElementById('startDate').value = localStorage.getItem('cycleStart');
-}
-if (localStorage.getItem('cycleEnd')) {
-  document.getElementById('endDate').value = localStorage.getItem('cycleEnd');
-}
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('cycleStart')) {
+    document.getElementById('startDate').value = localStorage.getItem('cycleStart');
+    updateEndDateDisplay();
+  }
+  calculateProgress();
+});
 
-calculateProgress();
+// Atualizar quando a data de início for alterada
+document.getElementById('startDate').addEventListener('change', updateEndDateDisplay);
 </script>
 
 </body>
