@@ -1,86 +1,116 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <script
-          src="https://kit.fontawesome.com/9c67c46016.js"
-          crossorigin="anonymous"
-        ></script>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Avaliação Física</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
-        />
-        <link rel="stylesheet" href="avaliacaofisica.css" />
-        <!-- Estilo CSS para a página -->
-        <link rel="shortcut icon" href="icons/icone.ico" type="image/x-icon" />
-        <!-- Ícone do site -->
-    </head>
-  <body>
-    <div class="container">
-      <h1>Avaliação Física</h1>
 
-      <!-- Seletor de Aluno -->
-      <div id="containerSeletorAluno">
-        <label for="studentSelect">Selecione um Aluno:</label>
-        <select id="studentSelect">
-          <option value="" disabled selected>Selecione ou adicione um aluno</option>
-        </select>
-        <button id="btnExcluirAluno"><i class="fas fa-user-minus"></i>Excluir Aluno</button>
-        <button id="btnAdicionarAluno"><i class="fas fa-user-plus"></i>Adicionar Novo Aluno</button>
-      </div>
+<head>
+  <script src="https://kit.fontawesome.com/9c67c46016.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliação Física</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="avaliacaofisica.css" />
+  <!-- Estilo CSS para a página -->
+  <link rel="shortcut icon" href="icons/icone.ico" type="image/x-icon" />
+  <!-- Ícone do site -->
+</head>
 
-      <!-- Formulário de criação/exclusão de aluno -->
-      <div id="novoAlunoContainer"></div>
-      <div id="excluirAlunoContainer"></div>
+<body>
+  <div class="container">
+    <h1>Avaliação Física</h1>
 
-      <!-- Container para indicar que estamos em modo de edição de avaliação -->
-      <div id="edicaoAvaliacaoContainer"></div>
-
-      <!-- Formulário de Avaliação -->
-      <form id="evaluationForm" style="display: none">
-        <h2>Dados Gerais</h2>
-        <label for="name">Nome do Aluno:</label>
-        <input type="text" id="name" placeholder="Nome do aluno" readonly />
-
-        <label for="weight">Peso (kg):</label>
-        <input
-          type="number"
-          id="weight"
-          step="0.01"
-          placeholder="Ex: 70.5"
-          required
-        />
-
-        <label for="height">Estatura (cm):</label>
-        <input
-          type="number"
-          id="height"
-          step="0.01"
-          placeholder="Ex: 175"
-          required
-        />
-
-        <button type="submit">
-          <i class="fas fa-save"></i> Salvar Avaliação
-        </button>
-      </form>
-
-      <!-- Resultados -->
-      <div id="results" class="result-container" style="display: none">
-        <h2>Avaliações do Aluno</h2>
-        <ul id="evaluationList" class="evaluation-list"></ul>
-
-        <!-- Container para confirmação de exclusão de avaliação -->
-        <div id="excluirAvaliacaoContainerEval"></div>
-      </div>
+    <!-- Seletor de Aluno -->
+    <div id="containerSeletorAluno">
+      <label for="studentSelect">Selecione um Aluno:</label>
+      <select id="studentSelect">
+        <option value="" disabled selected>Selecione ou adicione um aluno</option>
+      </select>
+      <button id="btnExcluirAluno"><i class="fas fa-user-minus"></i>Excluir Aluno</button>
+      <button id="btnAdicionarAluno"><i class="fas fa-user-plus"></i>Adicionar Novo Aluno</button>
     </div>
 
-    <footer>&copy; Direitos Reservados Planilhas Personal Trainer</footer>
-    <script src="avaliacaofisica.js"></script>
-  </body>
+    <!-- Formulário de criação/exclusão de aluno -->
+    <div id="novoAlunoContainer"></div>
+    <div id="excluirAlunoContainer"></div>
+
+    <!-- Container para indicar que estamos em modo de edição de avaliação -->
+    <div id="edicaoAvaliacaoContainer"></div>
+
+    <!-- Formulário de Avaliação -->
+    <form id="evaluationForm" style="display: none">
+      <h2>Dados Gerais</h2>
+      <label for="name">Nome do Aluno:</label>
+      <input type="text" id="name" placeholder="Nome do aluno" readonly />
+
+      <label for="age">Idade:</label>
+      <input type="number" id="age" placeholder="Ex: 25" required>
+
+      <label for="sexo">Sexo</label>
+      <select name="sexo" id="sexo">Sexo
+        <option value="" disabled selected>Selecione</option>
+        <option value="homem">Masculino</option>
+        <option value="mulher">Feminino</option>
+      </select>
+
+      <label for="weight">Peso (kg):</label>
+      <input type="number" id="weight" step="0.01" placeholder="Ex: 70.5" required />
+
+      <label for="height">Estatura (cm):</label>
+      <input type="number" id="height" step="0.01" placeholder="Ex: 175" required />
+
+      <!-- Perimetria (dados com fita métrica) -->
+
+      <h2>Perimetria</h2>
+      <label for="shoulders">Ombros (cm):</label>
+      <input type="number" id="shoulders" step="0.1" placeholder="Ex: 110.5">
+
+      <label for="chest">Peitoral (cm):</label>
+      <input type="number" id="chest" step="0.1" placeholder="Ex: 100.5">
+
+      <label for="armRight">Braço Direito (cm):</label>
+      <input type="number" id="armRight" step="0.1" placeholder="Ex: 34.5">
+
+      <label for="armLeft">Braço Esquerdo (cm):</label>
+      <input type="number" id="armLeft" step="0.1" placeholder="Ex: 34.5">
+
+      <label for="waist">Cintura (cm):</label>
+      <input type="number" id="waist" step="0.1" placeholder="Ex: 80.5">
+
+      <label for="abd">Abdomên (cm):</label>
+      <input type="number" id="abd" step="0.1" placeholder="Ex: 90.5">
+
+      <label for="hip">Quadril (cm):</label>
+      <input type="number" id="hip" step="0.1" placeholder="Ex: 95.0">
+
+      <label for="legRight">Perna Direita (cm):</label>
+      <input type="number" id="legRight" step="0.1" placeholder="Ex: 50.0">
+
+      <label for="legLeft">Perna Esquerda (cm):</label>
+      <input type="number" id="legLeft" step="0.1" placeholder="Ex: 50.0">
+
+      <label for="calfRight">Panturrilha Direita (cm):</label>
+      <input type="number" id="calfRight" step="0.1" placeholder="Ex: 35.0">
+
+      <label for="calfLeft">Panturrilha Esquerda (cm):</label>
+      <input type="number" id="calfLeft" step="0.1" placeholder="Ex: 35.0">
+
+      <button type="submit">
+        <i class="fas fa-save"></i> Salvar Avaliação
+      </button>
+    </form>
+
+    <!-- Resultados -->
+    <div id="results" class="result-container" style="display: none">
+      <h2>Avaliações do Aluno</h2>
+      <ul id="evaluationList" class="evaluation-list"></ul>
+
+      <!-- Container para confirmação de exclusão de avaliação -->
+      <div id="excluirAvaliacaoContainerEval"></div>
+    </div>
+  </div>
+
+  <footer>&copy; Direitos Reservados Planilhas Personal Trainer</footer>
+  <script src="avaliacaofisica.js"></script>
+</body>
+
 </html>
