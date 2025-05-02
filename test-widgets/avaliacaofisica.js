@@ -29,6 +29,10 @@ function carregarAlunos() {
 
 /* ─── Adicionar Novo Aluno ─────────────────────────────────────────────────── */
 btnAdicionar.addEventListener("click", () => {
+  // Ocultar elementos ao iniciar criação
+  studentSelect.style.display = "none";
+  btnExcluir.style.display = "none";
+  btnAdicionar.style.display = "none";
   excluirAlunoContainer.innerHTML = "";
   novoAlunoContainer.innerHTML = `
     <input id="inputNovoAluno" type="text" placeholder="Nome do novo aluno" />
@@ -40,25 +44,36 @@ btnAdicionar.addEventListener("click", () => {
     const nome = document.getElementById("inputNovoAluno").value.trim();
     if (!nome) return;
     if (alunos[nome]) {
-      // feedback em tela
       document.getElementById("inputNovoAluno").classList.add("input-error");
       return;
     }
     alunos[nome] = [];
     localStorage.setItem("alunos", JSON.stringify(alunos));
     carregarAlunos();
+    // Restaurar elementos após criação
     novoAlunoContainer.innerHTML = "";
+    studentSelect.style.display = "block";
+    btnExcluir.style.display = "inline-block";
+    btnAdicionar.style.display = "inline-block";
     studentSelect.value = nome;
     mostrarFormulario(nome);
   });
 
   document.getElementById("cancelarCriacao").addEventListener("click", () => {
     novoAlunoContainer.innerHTML = "";
+    // Restaurar elementos após cancelamento
+    studentSelect.style.display = "block";
+    btnExcluir.style.display = "inline-block";
+    btnAdicionar.style.display = "inline-block";
   });
 });
 
 /* ─── Excluir Aluno ───────────────────────────────────────────────────────── */
 btnExcluir.addEventListener("click", () => {
+  // Ocultar elementos ao iniciar exclusão
+  studentSelect.style.display = "none";
+  btnExcluir.style.display = "none";
+  btnAdicionar.style.display = "none";
   novoAlunoContainer.innerHTML = "";
   excluirAlunoContainer.innerHTML = `
     <select id="selectExcluirAluno">
@@ -66,7 +81,7 @@ btnExcluir.addEventListener("click", () => {
     </select>
     <div id="confirmExcluirCard"></div>
   `;
-  
+
   const sel = document.getElementById("selectExcluirAluno");
   Object.keys(alunos).forEach((nome) => {
     const opt = document.createElement("option");
@@ -90,8 +105,11 @@ btnExcluir.addEventListener("click", () => {
       localStorage.setItem("alunos", JSON.stringify(alunos));
       carregarAlunos();
       excluirAlunoContainer.innerHTML = "";
+      // Restaurar elementos após exclusão
+      studentSelect.style.display = "block";
+      btnExcluir.style.display = "inline-block";
+      btnAdicionar.style.display = "inline-block";
 
-      // Limpar exibição se o aluno excluído estiver ativo
       if (alunoAtual === nome) {
         evaluationForm.style.display = "none";
         results.style.display = "none";
@@ -104,10 +122,13 @@ btnExcluir.addEventListener("click", () => {
 
     document.getElementById("confirmNaoAluno").addEventListener("click", () => {
       excluirAlunoContainer.innerHTML = "";
+      // Restaurar elementos após cancelamento
+      studentSelect.style.display = "block";
+      btnExcluir.style.display = "inline-block";
+      btnAdicionar.style.display = "inline-block";
     });
   });
 });
-
 
 /* ─── Mostrar Formulário / Carregar Avaliações ────────────────────────────── */
 function mostrarFormulario(nome) {
@@ -144,12 +165,10 @@ evaluationList.addEventListener("click", (e) => {
     const idx = +editBtn.dataset.index;
     const avaliacao = alunos[alunoAtual][idx];
 
-    // preenche o formulário
     document.getElementById("weight").value = avaliacao.weight;
     document.getElementById("height").value = avaliacao.height;
     avaliacaoEditando = idx;
 
-    // mostra modo edição
     edicaoContainer.innerHTML = `
       <div class="card">
         <p>Editando avaliação <strong>#${idx + 1}</strong></p>
@@ -164,7 +183,6 @@ evaluationList.addEventListener("click", (e) => {
         evaluationForm.reset();
       });
 
-    // garante que o usuário veja o form
     evaluationForm.scrollIntoView({ behavior: "smooth" });
   }
 });
@@ -227,6 +245,15 @@ studentSelect.addEventListener("change", () => {
   const nome = studentSelect.value;
   if (nome) mostrarFormulario(nome);
 });
+
+/* --- Caixa de alerta ----------------- */
+function alertBox(mensagem) {
+  const div = document.createElement("div");
+  div.className = "alerta";
+  div.textContent = mensagem;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
+}
 
 /* ─── Inicialização ───────────────────────────────────────────────────────── */
 carregarAlunos();
