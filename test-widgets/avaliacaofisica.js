@@ -66,6 +66,7 @@ btnExcluir.addEventListener("click", () => {
     </select>
     <div id="confirmExcluirCard"></div>
   `;
+  
   const sel = document.getElementById("selectExcluirAluno");
   Object.keys(alunos).forEach((nome) => {
     const opt = document.createElement("option");
@@ -78,26 +79,35 @@ btnExcluir.addEventListener("click", () => {
     const nome = sel.value;
     document.getElementById("confirmExcluirCard").innerHTML = `
       <div class="card">
-        <p>Tem certeza que deseja excluir <strong>${nome}</strong>?</p>
-        <button id="confirmSim">Sim</button>
-        <button id="confirmNao">Não</button>
+        <p>Tem certeza que deseja excluir <strong>${nome}</strong> e todas as suas avaliações?</p>
+        <button id="confirmSimAluno">Sim</button>
+        <button id="confirmNaoAluno">Não</button>
       </div>
     `;
-    document.getElementById("confirmSim").addEventListener("click", () => {
+
+    document.getElementById("confirmSimAluno").addEventListener("click", () => {
       delete alunos[nome];
       localStorage.setItem("alunos", JSON.stringify(alunos));
       carregarAlunos();
       excluirAlunoContainer.innerHTML = "";
-      evaluationForm.style.display = "none";
-      results.style.display = "none";
-      evaluationList.innerHTML = "";
-      alunoAtual = "";
+
+      // Limpar exibição se o aluno excluído estiver ativo
+      if (alunoAtual === nome) {
+        evaluationForm.style.display = "none";
+        results.style.display = "none";
+        evaluationList.innerHTML = "";
+        alunoAtual = "";
+      }
+
+      alertBox("Aluno excluído com sucesso.");
     });
-    document.getElementById("confirmNao").addEventListener("click", () => {
+
+    document.getElementById("confirmNaoAluno").addEventListener("click", () => {
       excluirAlunoContainer.innerHTML = "";
     });
   });
 });
+
 
 /* ─── Mostrar Formulário / Carregar Avaliações ────────────────────────────── */
 function mostrarFormulario(nome) {
