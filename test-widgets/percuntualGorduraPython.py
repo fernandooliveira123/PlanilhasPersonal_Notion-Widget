@@ -2,9 +2,10 @@
 
 idade = int(input("Insira sua idade: "))
 sexo= input("Insira M ou F: ")
-protocolo = input("Escolha o protocolo, 3 ou 7 dpbras? digite apenas o nº: ")
+sexoMinusculo = sexo.lower() #converte para minusculo
+protocolo = input("Escolha o protocolo, 3 ou 7 dobras? digite apenas o nº: ")
 
-if sexo == "M":
+if sexo == "m":
     print("insira as dobras cutaneas")
 
     if protocolo == "3":
@@ -31,7 +32,7 @@ if sexo == "M":
         print( f"Seu percentual de gordura é: {percentualGordura:.2f}%")
 
 
-elif sexo == "F":
+elif sexo == "f":
      print("insira as dobras cutaneas")
      
      if protocolo == "3":
