@@ -1,4 +1,4 @@
-#Percentual de gordura Pollock 3 dobras
+#Percentual de gordura Pollock 3-7 dobras
 
 idade = int(input("Insira sua idade: "))
 sexo= input("Insira M ou F: ")
