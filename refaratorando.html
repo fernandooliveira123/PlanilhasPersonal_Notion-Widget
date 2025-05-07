@@ -227,6 +227,20 @@
             <label for="calfLeft">Panturrilha Esquerda (cm):</label>
             <input type="number" id="calfLeft" step="0.1" placeholder="Ex: 35.0">
 
+
+            <h2>Adipometria (Pollock)</h2>
+            <select id="protocolo">
+                <option value="" disabled select>Selecione o protocolo</option>
+                <option value="3">3 Dobras</option>
+                <option value="7">7 Dobras</option>
+            </select>
+
+            <button onclick="carregarDobras()">Carregar Dobras</button>
+
+            <div id="dobrasCutaneas"></div>
+            <button onclick="calcularPercentual()">Calcular %G</button>
+
+
             <button type="submit">
                 <i class="fas fa-save"></i> Salvar Avaliação
             </button>
@@ -310,14 +324,7 @@
             }
 
             //Carregar dobras Cutaneas
-            function carregarDobras() {
-                if (sexo === 'homem') {
-                    dobrasCutaneasHomem.innerHTML = `
-                  <h3>Dobras Cutâneas Masculinas</h3>
-                    
-                  `
-                }
-            }
+           
 
             // Adiciona um novo aluno
             function adicionarNovoAluno() {
