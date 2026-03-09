@@ -1,167 +1,201 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evolução - Responsivo e Automático</title>
-    <style>
-        body {
-            background-color: #191919;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progresso do Tempo</title>
 
-        .progress-container {
-            width: 90%;
-            max-width: 400px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+<style>
 
-        .progress-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 2px solid white;
-            padding: 5px;
-            border-radius: 5px;
-            background-color: #222;
-        }
+body{
+background:#191919;
+color:white;
+font-family:Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
 
-        .progress-bar-inner {
-            height: 30px;
-            background-color: #4caf50;
-            width: 0%;
-            border-radius: 3px;
-            transition: width 0.3s ease-in-out;
-        }
+.progress-container{
+width:90%;
+max-width:420px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
 
-        .progress-label {
-            margin-left: 10px;
-            font-size: 18px;
-        }
+.progress-bar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+border:2px solid white;
+padding:6px;
+border-radius:6px;
+background:#222;
+}
 
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .progress-bar-inner {
-                height: 25px;
-            }
+.progress-bar-inner{
+height:28px;
+background:#4caf50;
+width:0%;
+border-radius:4px;
+transition:width .3s;
+}
 
-            .progress-label {
-                font-size: 16px;
-            }
-        }
+.progress-label{
+margin-left:10px;
+font-size:16px;
+}
 
-        @media (max-width: 480px) {
-            .progress-bar-inner {
-                height: 20px;
-            }
-
-            .progress-label {
-                font-size: 14px;
-            }
-        }
-    </style>
+</style>
 </head>
+
 <body>
 
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress-bar-inner" id="dayProgress"></div>
-            <div class="progress-label">Day: <span id="dayProgressText">0%</span></div>
-        </div>
+<div class="progress-container">
 
-        <div class="progress-bar">
-            <div class="progress-bar-inner" id="weekProgress"></div>
-            <div class="progress-label">Week: <span id="weekProgressText">0%</span></div>
-        </div>
+<div class="progress-bar">
+<div class="progress-bar-inner" id="dayProgress"></div>
+<div class="progress-label">Day: <span id="dayText">0%</span></div>
+</div>
 
-        <div class="progress-bar">
-            <div class="progress-bar-inner" id="monthProgress"></div>
-            <div class="progress-label">Month: <span id="monthProgressText">0%</span></div>
-        </div>
+<div class="progress-bar">
+<div class="progress-bar-inner" id="weekProgress"></div>
+<div class="progress-label">Week: <span id="weekText">0%</span></div>
+</div>
 
-        <div class="progress-bar">
-            <div class="progress-bar-inner" id="yearProgress"></div>
-            <div class="progress-label">Year: <span id="yearProgressText">0%</span></div>
-        </div>
-    </div>
+<div class="progress-bar">
+<div class="progress-bar-inner" id="monthProgress"></div>
+<div class="progress-label">Month: <span id="monthText">0%</span></div>
+</div>
 
-    <script>
-        function getDayProgress() {
-            const now = new Date();
-            const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-            const endOfDay = new Date(now.setHours(23, 59, 59, 999));
-            const totalDayTime = endOfDay - startOfDay;
-            const currentTime = Date.now() - startOfDay;
-            return Math.round((currentTime / totalDayTime) * 100);
-        }
+<div class="progress-bar">
+<div class="progress-bar-inner" id="quarterProgress"></div>
+<div class="progress-label">
+<span id="quarterName">T1</span>: 
+<span id="quarterText">0%</span>
+</div>
+</div>
 
-        function getWeekProgress() {
-            const today = new Date();
-            const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Domingo
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6); // Sábado
+<div class="progress-bar">
+<div class="progress-bar-inner" id="yearProgress"></div>
+<div class="progress-label">Year: <span id="yearText">0%</span></div>
+</div>
 
-            const totalWeekTime = endOfWeek - startOfWeek;
-            const currentTime = Date.now() - startOfWeek;
-            return Math.round((currentTime / totalWeekTime) * 100);
-        }
+</div>
 
-        function getMonthProgress() {
-            const today = new Date();
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            const totalMonthTime = endOfMonth - startOfMonth;
-            const currentTime = Date.now() - startOfMonth;
-            return Math.round((currentTime / totalMonthTime) * 100);
-        }
+<script>
 
-        function getYearProgress() {
-            const today = new Date();
-            const startOfYear = new Date(today.getFullYear(), 0, 1);
-            const endOfYear = new Date(today.getFullYear(), 11, 31);
-            const totalYearTime = endOfYear - startOfYear;
-            const currentTime = Date.now() - startOfYear;
-            return Math.round((currentTime / totalYearTime) * 100);
-        }
+function getDayProgress(){
 
-        function updateProgress() {
-            // Atualiza o progresso do Dia
-            const dayProgress = getDayProgress();
-            document.getElementById('dayProgress').style.width = dayProgress + '%';
-            document.getElementById('dayProgressText').textContent = dayProgress + '%';
+const now=new Date()
 
-            // Atualiza o progresso da Semana
-            const weekProgress = getWeekProgress();
-            document.getElementById('weekProgress').style.width = weekProgress + '%';
-            document.getElementById('weekProgressText').textContent = weekProgress + '%';
+const start=new Date(now)
+start.setHours(0,0,0,0)
 
-            // Atualiza o progresso do Mês
-            const monthProgress = getMonthProgress();
-            document.getElementById('monthProgress').style.width = monthProgress + '%';
-            document.getElementById('monthProgressText').textContent = monthProgress + '%';
+const end=new Date(now)
+end.setHours(23,59,59,999)
 
-            // Atualiza o progresso do Ano
-            const yearProgress = getYearProgress();
-            document.getElementById('yearProgress').style.width = yearProgress + '%';
-            document.getElementById('yearProgressText').textContent = yearProgress + '%';
-        }
+return Math.round((Date.now()-start)/(end-start)*100)
 
-        // Chama a função updateProgress automaticamente a cada 1 segundo (1000 ms)
-        setInterval(updateProgress, 1000);
+}
 
-        // Atualiza o progresso ao carregar a página
-        window.onload = updateProgress;
-    </script>
+function getWeekProgress(){
+
+const today=new Date()
+
+const start=new Date(today)
+start.setDate(today.getDate()-today.getDay())
+start.setHours(0,0,0,0)
+
+const end=new Date(start)
+end.setDate(start.getDate()+6)
+end.setHours(23,59,59,999)
+
+return Math.round((Date.now()-start)/(end-start)*100)
+
+}
+
+function getMonthProgress(){
+
+const today=new Date()
+
+const start=new Date(today.getFullYear(),today.getMonth(),1)
+const end=new Date(today.getFullYear(),today.getMonth()+1,0,23,59,59,999)
+
+return Math.round((Date.now()-start)/(end-start)*100)
+
+}
+
+function getQuarterInfo(){
+
+const today=new Date()
+const month=today.getMonth()
+
+const quarter=Math.floor(month/3)
+
+const names=[
+"T1 (Jan–Mar)",
+"T2 (Abr–Jun)",
+"T3 (Jul–Set)",
+"T4 (Out–Dez)"
+]
+
+const start=new Date(today.getFullYear(),quarter*3,1)
+const end=new Date(today.getFullYear(),quarter*3+3,0,23,59,59,999)
+
+const progress=Math.round((Date.now()-start)/(end-start)*100)
+
+return{
+name:names[quarter],
+progress:progress
+}
+
+}
+
+function getYearProgress(){
+
+const today=new Date()
+
+const start=new Date(today.getFullYear(),0,1)
+const end=new Date(today.getFullYear(),11,31,23,59,59,999)
+
+return Math.round((Date.now()-start)/(end-start)*100)
+
+}
+
+function update(){
+
+const day=getDayProgress()
+document.getElementById("dayProgress").style.width=day+"%"
+document.getElementById("dayText").textContent=day+"%"
+
+const week=getWeekProgress()
+document.getElementById("weekProgress").style.width=week+"%"
+document.getElementById("weekText").textContent=week+"%"
+
+const month=getMonthProgress()
+document.getElementById("monthProgress").style.width=month+"%"
+document.getElementById("monthText").textContent=month+"%"
+
+const quarter=getQuarterInfo()
+document.getElementById("quarterProgress").style.width=quarter.progress+"%"
+document.getElementById("quarterText").textContent=quarter.progress+"%"
+document.getElementById("quarterName").textContent=quarter.name
+
+const year=getYearProgress()
+document.getElementById("yearProgress").style.width=year+"%"
+document.getElementById("yearText").textContent=year+"%"
+
+}
+
+setInterval(update,1000)
+
+update()
+
+</script>
 
 </body>
 </html>
